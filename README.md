@@ -55,11 +55,8 @@ $ ganache-cli -d
 
 - 2: Execute test of the smart-contracts (on the local)
   - Test for the contract
-    - `$ npm run test:referral`
+    - `$ npm run test:nft-yield-farming`
        ($ truffle test ./test/test-local/Referral.test.js)
-
-    - `$ npm run test:payroll_mining`
-       ($ truffle test ./test/test-local/PayrollMining.test.js)
 
 <br>
 
