@@ -102,21 +102,21 @@ contract NFTYieldFarming is Ownable {
         }
     }
     
-    // claim random nft's from available balance
-    function claimRandom() public {
-        for(uint64 i; i < nftPoolLength(); i++) {
-            NFTInfo storage nft = nftInfo[i];
-            uint256 userBalance = earned(msg.sender);
-            uint256 maxQty = userBalance.div(nft.price);        // max quantity of nfts user can claim
-            if(nft.remaining > 0 && maxQty > 0) {
-                if(maxQty <= nft.remaining) {
-                    claim(i, maxQty);
-                } else {
-                    claim(i, nft.remaining);
-                }
-            }
-        }
-    }
+    /// claim random nft's from available balance
+    // function claimRandom() public {
+    //     for(uint64 i; i < nftPoolLength(); i++) {
+    //         NFTInfo storage nft = nftInfo[i];
+    //         uint256 userBalance = earned(msg.sender);
+    //         uint256 maxQty = userBalance.div(nft.price);        // max quantity of nfts user can claim
+    //         if(nft.remaining > 0 && maxQty > 0) {
+    //             if(maxQty <= nft.remaining) {
+    //                 claim(i, maxQty);
+    //             } else {
+    //                 claim(i, nft.remaining);
+    //             }
+    //         }
+    //     }
+    // }
     
     function withdraw(uint256 _amount) public {
         UserInfo storage user = userInfo[msg.sender];
@@ -135,7 +135,7 @@ contract NFTYieldFarming is Ownable {
     
     // claim random NFTs and withdraw all LP tokens
     function exit() external {
-        claimRandom();
+        //claimRandom();
         withdraw(userInfo[msg.sender].amount);
     }
     
@@ -168,12 +168,12 @@ contract NFTYieldFarming is Ownable {
         return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
     }
 
-    function earned(address account) public view returns (uint256) {
-        uint256 blockTime = block.timestamp;
-        return
-            points[account].add(
-                blockTime.sub(lastUpdateTime[account]).mul(1e18).div(864).mul(balanceOf(account).div(rate))
-            );
-    }
+    // function earned(address account) public view returns (uint256) {
+    //     uint256 blockTime = block.timestamp;
+    //     return
+    //         points[account].add(
+    //             blockTime.sub(lastUpdateTime[account]).mul(1e18).div(864).mul(balanceOf(account).div(rate))
+    //         );
+    // }
 
 }
