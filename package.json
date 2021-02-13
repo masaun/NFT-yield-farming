@@ -1,0 +1,25 @@
+{
+  "name": "NFT-yield-farming",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test ./test/test-local/*",
+    "test:referral": "truffle test ./test/test-local/Referral.test.js",
+    "compile:local": "truffle compile --reset --network local",
+    "migrate:local": "truffle migrate --reset --network local",
+    "start-blank": "rm -rf client/src && cp -rf barebones/src client/"
+  },
+  "author": "masaun",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.2.0",
+    "@openzeppelin/test-helpers": "^0.5.10",
+    "@truffle/hdwallet-provider": "^1.2.2",
+    "dotenv": "^8.2.0",
+    "eth-block-tracker": "^4.4.3"
+  },
+  "devDependencies": {}
+}
