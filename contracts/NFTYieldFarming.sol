@@ -141,7 +141,7 @@ contract NFTYieldFarming is Ownable {
     
     function earned(address userAddress) public view returns (uint256) {
         UserInfo memory user = userInfo[userAddress];
-        return user.points.add(Pending(user));
+        return user.points.add(pending(user));
     }
     
     function pending(UserInfo memory user) internal view returns (uint256) {
