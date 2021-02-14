@@ -34,6 +34,9 @@ contract NFTYieldFarming is Ownable {
         lpToken = _lpToken;
     }
     
+    /**
+     * @notice - Add a target NFT to stake
+     */
     function addNFT(
         address contractAddress,    // Only ERC-1155 NFT Supported!
         uint256 id,
