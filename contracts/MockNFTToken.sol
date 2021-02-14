@@ -1,20 +1,25 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.12;
+pragma solidity ^0.6.0;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract MockNFTToken is ERC1155 {
-    uint256 public constant GOLD = 0;
-    uint256 public constant SILVER = 1;
-    uint256 public constant THORS_HAMMER = 2;
-    uint256 public constant SWORD = 3;
-    uint256 public constant SHIELD = 4;
+contract MockNFTToken is ERC721 {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
-    constructor() public ERC1155("https://game.example/api/item/{id}.json") {
-        _mint(msg.sender, GOLD, 10**18, "");
-        _mint(msg.sender, SILVER, 10**27, "");
-        _mint(msg.sender, THORS_HAMMER, 1, "");
-        _mint(msg.sender, SWORD, 10**9, "");
-        _mint(msg.sender, SHIELD, 10**9, "");
+    constructor() public ERC721("Mock NFT Token", "MNFT") {}
+
+    function mintTo(address to, string memory tokenURI)
+        public
+        returns (uint256)
+    {
+        _tokenIds.increment();
+
+        uint256 newTokenId = _tokenIds.current();
+        _mint(to, newTokenId);
+        _setTokenURI(newTokenId, tokenURI);
+
+        return newTokenId;
     }
 }

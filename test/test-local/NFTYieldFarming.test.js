@@ -38,7 +38,7 @@ contract("NFTYieldFarming", function(accounts) {
     }); 
 
     describe("Setup smart-contracts", () => {
-        it("Deploy the NFT token (ERC1155) contract instance", async () => {
+        it("Deploy the NFT token (ERC721) contract instance", async () => {
             nftToken = await NFTToken.new({ from: deployer });
             NFT_TOKEN = nftToken.address;
         });
@@ -55,6 +55,17 @@ contract("NFTYieldFarming", function(accounts) {
         });
     });
 
+    describe("Preparation for tests in advance", () => {
+        it("Mint the NFT token (ERC721) to user1", async () => {
+            const tokenURI = "https://testnft.example/token-id-8u5h2m.json";
+            let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: user1 });
+        });
+
+        it("Transfer the LP token (ERC20) from deployer to user1", async () => {
+            const amount = web3.utils.toWei('1000', 'ether');
+            let txReceipt = await lpToken.transfer(user1, amount, { from: deployer });
+        });
+    });
 
 
 
