@@ -7,7 +7,8 @@ const { time } = require('@openzeppelin/test-helpers');
 
 /// Artifact of smart contracts 
 const NFTYieldFarming = artifacts.require("NFTYieldFarming");
-const LPToken = artifacts.require("MockLPToken");  /// For a LP token
+const NFTToken = artifacts.require("MockNFTToken");  /// As a NFT token (ERC1155)
+const LPToken = artifacts.require("MockLPToken");    /// As a LP token
 
 
 /***
@@ -22,10 +23,12 @@ contract("NFTYieldFarming", function(accounts) {
 
     /// Global contract instance
     let nftYieldFarming;
+    let nftToken;
     let lpToken;
 
     /// Global variable for each contract addresses
     let NFT_YIELD_FARMING;
+    let NFT_TOKEN;
     let LP_TOKEN;
 
     describe("Check state in advance", () => {
@@ -35,6 +38,11 @@ contract("NFTYieldFarming", function(accounts) {
     }); 
 
     describe("Setup smart-contracts", () => {
+        it("Deploy the NFT token (ERC1155) contract instance", async () => {
+            nftToken = await NFTToken.new({ from: deployer });
+            NFT_TOKEN = nftToken.address;
+        });
+
         it("Deploy the LP token (ERC20) contract instance", async () => {
             lpToken = await LPToken.new({ from: deployer });
             LP_TOKEN = lpToken.address;
@@ -48,6 +56,6 @@ contract("NFTYieldFarming", function(accounts) {
     });
 
 
-    
+
 
 });
