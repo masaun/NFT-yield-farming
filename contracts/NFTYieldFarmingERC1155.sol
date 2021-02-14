@@ -7,10 +7,7 @@ import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
 import { Ownable } from '@openzeppelin/contracts/access/Ownable.sol';
 
 
-/**
- * @notice - This is the NFT Yield Fariming contract (for ERC721-based NFT)
- */
-contract NFTYieldFarming is Ownable {
+contract NFTYieldFarmingERC1155 is Ownable {
     using SafeMath for uint256;
     
     struct UserInfo {
