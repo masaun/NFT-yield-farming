@@ -38,7 +38,8 @@ contract NFTYieldFarming is Ownable {
     }
     
     /**
-     * @notice - Add a target NFT to stake
+     * @notice - Add a new NFT token to the Pool (as a target to stake). Can only be called by the owner.
+     * @notice - XXX DO NOT add the same NFT token more than once. Rewards will be messed up if you do.
      */
     function addNFT(
         address contractAddress,    // Only ERC-1155 NFT Supported!
@@ -101,29 +102,7 @@ contract NFTYieldFarming is Ownable {
         nft.remaining = nft.remaining.sub(_quantity);
     }
     
-    function claimMultiple(uint256[] calldata _nftIndex, uint256[] calldata _quantity) external {
-        require(_nftIndex.length == _quantity.length, "Incorrect array length");
-        for(uint64 i=0; i< _nftIndex.length; i++) {
-            claim(_nftIndex[i], _quantity[i]);
-        }
-    }
-    
-    /// claim random nft's from available balance
-    // function claimRandom() public {
-    //     for(uint64 i; i < nftPoolLength(); i++) {
-    //         NFTInfo storage nft = nftInfo[i];
-    //         uint256 userBalance = earned(msg.sender);
-    //         uint256 maxQty = userBalance.div(nft.price);        // max quantity of nfts user can claim
-    //         if(nft.remaining > 0 && maxQty > 0) {
-    //             if(maxQty <= nft.remaining) {
-    //                 claim(i, maxQty);
-    //             } else {
-    //                 claim(i, nft.remaining);
-    //             }
-    //         }
-    //     }
-    // }
-    
+    /// Withdraw parts of LP tokens amount
     function withdraw(uint256 _amount) public {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= _amount, "Insufficient staked");
@@ -139,9 +118,8 @@ contract NFTYieldFarming is Ownable {
         );
     }
     
-    // claim random NFTs and withdraw all LP tokens
+    // withdraw all LP tokens
     function exit() external {
-        //claimRandom();
         withdraw(userInfo[msg.sender].amount);
     }
     
@@ -159,27 +137,6 @@ contract NFTYieldFarming is Ownable {
     function nftPoolLength() public view returns (uint256) {
         return nftInfo.length;
     }
-    
-    // required function to allow receiving ERC-1155
-    function onERC1155Received(
-        address operator,
-        address from,
-        uint256 id,
-        uint256 value,
-        bytes calldata data
-    )
-        external
-        returns(bytes4)
-    {
-        return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
-    }
 
-    // function earned(address account) public view returns (uint256) {
-    //     uint256 blockTime = block.timestamp;
-    //     return
-    //         points[account].add(
-    //             blockTime.sub(lastUpdateTime[account]).mul(1e18).div(864).mul(balanceOf(account).div(rate))
-    //         );
-    // }
 
 }

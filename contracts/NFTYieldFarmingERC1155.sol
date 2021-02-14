@@ -13,10 +13,10 @@ contract NFTYieldFarmingERC1155 is Ownable {
     struct UserInfo {
         uint256 amount;         // current staked LP
         uint256 lastUpdateAt;   // unix timestamp for last details update (when points calculated)
-        uint256 points;     // total points collected before latest deposit
+        uint256 points;         // total points collected before latest deposit
     }
     
-    struct NFTInfo {
+    struct NFTInfo {            /// [Note]: This struct is same with the Pool struct
         address contractAddress;
         uint256 id;             // NFT id
         uint256 remaining;      // NFTs remaining to farm
