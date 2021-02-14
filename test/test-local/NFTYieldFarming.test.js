@@ -67,6 +67,21 @@ contract("NFTYieldFarming", function(accounts) {
         });
     });
 
+    describe("Process of the NFT yield farming (in case all staked-LP tokens are not withdrawn)", () => {
+        it("Add NFT as a target", async () => {});
+
+        it("Stake LP tokens to the NFT", async () => {});
+
+        it("Claim specified amount of LP tokens and receive reward tokens", async () => {});
+    });
+
+    describe("Process of the NFT yield farming (in case all staked-LP tokens are withdrawn)", () => {
+        it("Add NFT as a target", async () => {});
+
+        it("Stake LP tokens to the NFT", async () => {});
+
+        it("Withdraw all amount of LP tokens and receive reward tokens", async () => {});  /// [This is should be]       
+    });
 
 
 });

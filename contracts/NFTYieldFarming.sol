@@ -16,7 +16,7 @@ contract NFTYieldFarming is Ownable {
     struct UserInfo {
         uint256 amount;         // current staked LP
         uint256 lastUpdateAt;   // unix timestamp for last details update (when points calculated)
-        uint256 points;     // total points collected before latest deposit
+        uint256 points;         // total points collected before latest deposit
     }
     
     struct NFTInfo {
@@ -26,8 +26,8 @@ contract NFTYieldFarming is Ownable {
         uint256 price;          // points required to claim NFT
     }
     
-    uint256 public emissionRate;       // points generated per LP token per second staked
-    IERC20 lpToken;                    // token being staked
+    uint256 public emissionRate;  // points generated per LP token per second staked
+    IERC20 lpToken;               // token being staked
     
     NFTInfo[] public nftInfo;
     mapping(address => UserInfo) public userInfo;
