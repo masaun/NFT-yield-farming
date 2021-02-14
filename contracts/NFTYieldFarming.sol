@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity ^0.6.12;
 
-import { IERC1155 } from '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
+import { IERC721 } from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
 import { Ownable } from '@openzeppelin/contracts/access/Ownable.sol';
@@ -42,17 +42,15 @@ contract NFTYieldFarming is Ownable {
      * @notice - XXX DO NOT add the same NFT token more than once. Rewards will be messed up if you do.
      */
     function addNFT(
-        address contractAddress,    // Only ERC-1155 NFT Supported!
+        address contractAddress,    // Only ERC721 NFT Supported!
         uint256 id,
         uint256 total,              // amount of NFTs deposited to farm (need to approve before)
         uint256 price
     ) external onlyOwner {
-        IERC1155(contractAddress).safeTransferFrom(
+        IERC721(contractAddress).safeTransferFrom(
             msg.sender,
             address(this),
-            id,
-            total,
-            ""
+            id
         );
         nftInfo.push(NFTInfo({
             contractAddress: contractAddress,
@@ -91,12 +89,10 @@ contract NFTYieldFarming is Ownable {
         user.lastUpdateAt = now;
         
         // transfer nft
-        IERC1155(nft.contractAddress).safeTransferFrom(
+        IERC721(nft.contractAddress).safeTransferFrom(
             address(this),
             msg.sender,
-            nft.id,
-            _quantity,
-            ""
+            nft.id
         );
         
         nft.remaining = nft.remaining.sub(_quantity);
