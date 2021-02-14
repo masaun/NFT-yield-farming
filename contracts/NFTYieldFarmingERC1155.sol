@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity ^0.6.12;
 
-import { IERC721 } from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
+import { IERC1155 } from '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
 import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
 import { Ownable } from '@openzeppelin/contracts/access/Ownable.sol';
 
 
-/**
- * @notice - This is the NFT Yield Fariming contract (for ERC721-based NFT)
- */
-contract NFTYieldFarming is Ownable {
+contract NFTYieldFarmingERC1155 is Ownable {
     using SafeMath for uint256;
     
     struct UserInfo {
@@ -19,15 +16,15 @@ contract NFTYieldFarming is Ownable {
         uint256 points;         // total points collected before latest deposit
     }
     
-    struct NFTInfo {
+    struct NFTInfo {            /// [Note]: This struct is same with the Pool struct
         address contractAddress;
         uint256 id;             // NFT id
         uint256 remaining;      // NFTs remaining to farm
         uint256 price;          // points required to claim NFT
     }
     
-    uint256 public emissionRate;  // points generated per LP token per second staked
-    IERC20 lpToken;               // token being staked
+    uint256 public emissionRate;       // points generated per LP token per second staked
+    IERC20 lpToken;                    // token being staked
     
     NFTInfo[] public nftInfo;
     mapping(address => UserInfo) public userInfo;
@@ -38,19 +35,20 @@ contract NFTYieldFarming is Ownable {
     }
     
     /**
-     * @notice - Add a new NFT token to the Pool (as a target to stake). Can only be called by the owner.
-     * @notice - XXX DO NOT add the same NFT token more than once. Rewards will be messed up if you do.
+     * @notice - Add a target NFT to stake
      */
     function addNFT(
-        address contractAddress,    // Only ERC721 NFT Supported!
+        address contractAddress,    // Only ERC-1155 NFT Supported!
         uint256 id,
         uint256 total,              // amount of NFTs deposited to farm (need to approve before)
         uint256 price
     ) external onlyOwner {
-        IERC721(contractAddress).safeTransferFrom(
+        IERC1155(contractAddress).safeTransferFrom(
             msg.sender,
             address(this),
-            id
+            id,
+            total,
+            ""
         );
         nftInfo.push(NFTInfo({
             contractAddress: contractAddress,
@@ -89,16 +87,40 @@ contract NFTYieldFarming is Ownable {
         user.lastUpdateAt = now;
         
         // transfer nft
-        IERC721(nft.contractAddress).safeTransferFrom(
+        IERC1155(nft.contractAddress).safeTransferFrom(
             address(this),
             msg.sender,
-            nft.id
+            nft.id,
+            _quantity,
+            ""
         );
         
         nft.remaining = nft.remaining.sub(_quantity);
     }
     
-    /// Withdraw parts of LP tokens amount
+    function claimMultiple(uint256[] calldata _nftIndex, uint256[] calldata _quantity) external {
+        require(_nftIndex.length == _quantity.length, "Incorrect array length");
+        for(uint64 i=0; i< _nftIndex.length; i++) {
+            claim(_nftIndex[i], _quantity[i]);
+        }
+    }
+    
+    /// claim random nft's from available balance
+    // function claimRandom() public {
+    //     for(uint64 i; i < nftPoolLength(); i++) {
+    //         NFTInfo storage nft = nftInfo[i];
+    //         uint256 userBalance = earned(msg.sender);
+    //         uint256 maxQty = userBalance.div(nft.price);        // max quantity of nfts user can claim
+    //         if(nft.remaining > 0 && maxQty > 0) {
+    //             if(maxQty <= nft.remaining) {
+    //                 claim(i, maxQty);
+    //             } else {
+    //                 claim(i, nft.remaining);
+    //             }
+    //         }
+    //     }
+    // }
+    
     function withdraw(uint256 _amount) public {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= _amount, "Insufficient staked");
@@ -114,8 +136,9 @@ contract NFTYieldFarming is Ownable {
         );
     }
     
-    // withdraw all LP tokens
+    // claim random NFTs and withdraw all LP tokens
     function exit() external {
+        //claimRandom();
         withdraw(userInfo[msg.sender].amount);
     }
     
@@ -133,6 +156,27 @@ contract NFTYieldFarming is Ownable {
     function nftPoolLength() public view returns (uint256) {
         return nftInfo.length;
     }
+    
+    // required function to allow receiving ERC-1155
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes calldata data
+    )
+        external
+        returns(bytes4)
+    {
+        return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
+    }
 
+    // function earned(address account) public view returns (uint256) {
+    //     uint256 blockTime = block.timestamp;
+    //     return
+    //         points[account].add(
+    //             blockTime.sub(lastUpdateTime[account]).mul(1e18).div(864).mul(balanceOf(account).div(rate))
+    //         );
+    // }
 
 }
