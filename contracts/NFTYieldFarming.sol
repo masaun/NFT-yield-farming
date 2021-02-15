@@ -19,8 +19,8 @@ contract NFTYieldFarming is Ownable {
         uint256 rewardDebt; // Reward debt. See explanation below.
     }
 
-    // Info of each pool.
-    struct PoolInfo {
+    // Info of each NFT pool.
+    struct NFTPoolInfo {
         IERC20 lpToken; // Address of LP token contract.
         uint256 allocPoint; // How many allocation points assigned to this pool. GovernanceTokens to distribute per block.
         uint256 lastRewardBlock; // Last block number that GovernanceTokens distribution occurs.
@@ -43,7 +43,7 @@ contract NFTYieldFarming is Ownable {
     uint256 public constant BONUS_MULTIPLIER = 10;
     
     // Info of each pool.
-    PoolInfo[] public poolInfo;
+    NFTPoolInfo[] public nftPoolInfo;
     
     // Info of each user that stakes LP tokens.
     mapping(uint256 => mapping(address => UserInfo)) public userInfo;
@@ -76,7 +76,7 @@ contract NFTYieldFarming is Ownable {
     }
 
     function poolLength() external view returns (uint256) {
-        return poolInfo.length;
+        return nftPoolInfo.length;
     }
 
     // Add a new lp to the pool. Can only be called by the owner.
@@ -92,8 +92,8 @@ contract NFTYieldFarming is Ownable {
         uint256 lastRewardBlock =
             block.number > startBlock ? block.number : startBlock;
         totalAllocPoint = totalAllocPoint.add(_allocPoint);
-        poolInfo.push(
-            PoolInfo({
+        nftPoolInfo.push(
+            NFTPoolInfo({
                 lpToken: _lpToken,
                 allocPoint: _allocPoint,
                 lastRewardBlock: lastRewardBlock,
@@ -111,10 +111,10 @@ contract NFTYieldFarming is Ownable {
         if (_withUpdate) {
             massUpdatePools();
         }
-        totalAllocPoint = totalAllocPoint.sub(poolInfo[_pid].allocPoint).add(
+        totalAllocPoint = totalAllocPoint.sub(nftPoolInfo[_pid].allocPoint).add(
             _allocPoint
         );
-        poolInfo[_pid].allocPoint = _allocPoint;
+        nftPoolInfo[_pid].allocPoint = _allocPoint;
     }
 
     // Return reward multiplier over the given _from to _to block.
@@ -141,7 +141,7 @@ contract NFTYieldFarming is Ownable {
         view
         returns (uint256)
     {
-        PoolInfo storage pool = poolInfo[_pid];
+        NFTPoolInfo storage pool = nftPoolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];
         uint256 accGovernanceTokenPerShare = pool.accGovernanceTokenPerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
@@ -161,7 +161,7 @@ contract NFTYieldFarming is Ownable {
 
     // Update reward vairables for all pools. Be careful of gas spending!
     function massUpdatePools() public {
-        uint256 length = poolInfo.length;
+        uint256 length = nftPoolInfo.length;
         for (uint256 pid = 0; pid < length; ++pid) {
             updatePool(pid);
         }
@@ -169,7 +169,7 @@ contract NFTYieldFarming is Ownable {
 
     // Update reward variables of the given pool to be up-to-date.
     function updatePool(uint256 _pid) public {
-        PoolInfo storage pool = poolInfo[_pid];
+        NFTPoolInfo storage pool = nftPoolInfo[_pid];
         if (block.number <= pool.lastRewardBlock) {
             return;
         }
@@ -193,7 +193,7 @@ contract NFTYieldFarming is Ownable {
 
     // Deposit LP tokens to MasterChef for GovernanceToken allocation.
     function deposit(uint256 _pid, uint256 _amount) public {
-        PoolInfo storage pool = poolInfo[_pid];
+        NFTPoolInfo storage pool = nftPoolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         updatePool(_pid);
         if (user.amount > 0) {
@@ -215,7 +215,7 @@ contract NFTYieldFarming is Ownable {
 
     // Withdraw LP tokens from MasterChef.
     function withdraw(uint256 _pid, uint256 _amount) public {
-        PoolInfo storage pool = poolInfo[_pid];
+        NFTPoolInfo storage pool = nftPoolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         require(user.amount >= _amount, "withdraw: not good");
         updatePool(_pid);
@@ -232,7 +232,7 @@ contract NFTYieldFarming is Ownable {
 
     // Withdraw without caring about rewards. EMERGENCY ONLY.
     function emergencyWithdraw(uint256 _pid) public {
-        PoolInfo storage pool = poolInfo[_pid];
+        NFTPoolInfo storage pool = nftPoolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         pool.lpToken.safeTransfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, _pid, user.amount);
