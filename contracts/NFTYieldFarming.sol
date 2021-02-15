@@ -185,8 +185,8 @@ contract NFTYieldFarming is Ownable {
             multiplier.mul(governanceTokenPerBlock).mul(pool.allocPoint).div(
                 totalAllocPoint
             );
-        governanceToken.mint(devaddr, governanceTokenReward.div(10));
-        governanceToken.mint(address(this), governanceTokenReward);
+        governanceToken.mint(devaddr, governanceTokenReward.div(10));  /// [Note]: mint method can be used by 
+        governanceToken.mint(address(this), governanceTokenReward);    /// [Note]: mint method can be used by only owner
         pool.accGovernanceTokenPerShare = pool.accGovernanceTokenPerShare.add(
             governanceTokenReward.mul(1e12).div(lpSupply)
         );

@@ -74,7 +74,8 @@ contract("NFTYieldFarming", function(accounts) {
 
         it("Transfer the LP token (ERC20) from deployer to user1", async () => {
             const amount = web3.utils.toWei('1000', 'ether');
-            let txReceipt = await lpToken.transfer(user1, amount, { from: deployer });
+            let txReceipt1 = await lpToken.transfer(user1, amount, { from: deployer });
+            let txReceipt2 = await lpToken.transfer(user2, amount, { from: deployer });
         });
     });
 
@@ -95,15 +96,15 @@ contract("NFTYieldFarming", function(accounts) {
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
         });
 
-        it("Advance block to 110", async () => {
-            await time.advanceBlockTo("110");
+        it("Advance block to 1359", async () => {
+            await time.advanceBlockTo("1359");
 
             let currentBlock = await time.latestBlock();
             console.log('=== currentBlock ===', String(currentBlock));
 
             assert.equal(
                 currentBlock,
-                "110",
+                "1359",
                 "Current block should be 110"
             );
         });
@@ -113,18 +114,12 @@ contract("NFTYieldFarming", function(accounts) {
             console.log('=== governanceTokenBalance ===', String(governanceTokenBalance));
         });
 
-        it("Claim specified amount of LP tokens and receive reward tokens", async () => {});
+        it("Un-stake and withdraw specified amount of LP tokens and receive reward tokens", async () => {
+            const _nftPoolId = 0;
+            const _unStakeAmount = web3.utils.toWei('50', 'ether');  /// 50 LP Token
 
-        it("Claim specified amount of LP tokens and receive reward tokens", async () => {});
+            let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: user1 });
+        });
     });
-
-    describe("Process of the NFT yield farming (in case all staked-LP tokens are withdrawn)", () => {
-        it("Add NFT as a target", async () => {});
-
-        it("Stake LP tokens to the NFT", async () => {});
-
-        it("Withdraw all amount of LP tokens and receive reward tokens", async () => {});  /// [This is should be]       
-    });
-
 
 });
