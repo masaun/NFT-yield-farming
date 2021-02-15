@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./SushiToken.sol";
+import "./GovernanceToken.sol";
 
-// NFTYieldFarming is the master of Sushi. He can make Sushi and he is a fair guy.
+// NFTYieldFarming is the master of GovernanceToken. He can make GovernanceToken and he is a fair guy.
 contract NFTYieldFarming is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -22,28 +22,25 @@ contract NFTYieldFarming is Ownable {
     // Info of each pool.
     struct PoolInfo {
         IERC20 lpToken; // Address of LP token contract.
-        uint256 allocPoint; // How many allocation points assigned to this pool. SUSHIs to distribute per block.
-        uint256 lastRewardBlock; // Last block number that SUSHIs distribution occurs.
-        uint256 accSushiPerShare; // Accumulated SUSHIs per share, times 1e12. See below.
+        uint256 allocPoint; // How many allocation points assigned to this pool. GovernanceTokens to distribute per block.
+        uint256 lastRewardBlock; // Last block number that GovernanceTokens distribution occurs.
+        uint256 accGovernanceTokenPerShare; // Accumulated GovernanceTokens per share, times 1e12. See below.
     }
     
-    // The SUSHI TOKEN!
-    SushiToken public sushi;
+    // The Governance Token!
+    GovernanceToken public governanceToken;
     
     // Dev address.
     address public devaddr;
     
-    // Block number when bonus SUSHI period ends.
+    // Block number when bonus GovernanceToken period ends.
     uint256 public bonusEndBlock;
     
-    // SUSHI tokens created per block.
-    uint256 public sushiPerBlock;
+    // GovernanceToken tokens created per block.
+    uint256 public governanceTokenPerBlock;
     
-    // Bonus muliplier for early sushi makers.
+    // Bonus muliplier for early GovernanceToken makers.
     uint256 public constant BONUS_MULTIPLIER = 10;
-    
-    // The migrator contract. It has a lot of power. Can only be set through governance (owner).
-    IMigratorChef public migrator;
     
     // Info of each pool.
     PoolInfo[] public poolInfo;
@@ -54,7 +51,7 @@ contract NFTYieldFarming is Ownable {
     // Total allocation poitns. Must be the sum of all allocation points in all pools.
     uint256 public totalAllocPoint = 0;
     
-    // The block number when SUSHI mining starts.
+    // The block number when GovernanceToken mining starts.
     uint256 public startBlock;
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
@@ -65,15 +62,15 @@ contract NFTYieldFarming is Ownable {
     );
 
     constructor(
-        SushiToken _sushi,
+        GovernanceToken _governanceToken,
         address _devaddr,
-        uint256 _sushiPerBlock,
+        uint256 _governanceTokenPerBlock,
         uint256 _startBlock,
         uint256 _bonusEndBlock
     ) public {
-        sushi = _sushi;
+        governanceToken = _governanceToken;
         devaddr = _devaddr;
-        sushiPerBlock = _sushiPerBlock;
+        governanceTokenPerBlock = _governanceTokenPerBlock;
         bonusEndBlock = _bonusEndBlock;
         startBlock = _startBlock;
     }
@@ -100,12 +97,12 @@ contract NFTYieldFarming is Ownable {
                 lpToken: _lpToken,
                 allocPoint: _allocPoint,
                 lastRewardBlock: lastRewardBlock,
-                accSushiPerShare: 0
+                accGovernanceTokenPerShare: 0
             })
         );
     }
 
-    // Update the given pool's SUSHI allocation point. Can only be called by the owner.
+    // Update the given pool's GovernanceToken allocation point. Can only be called by the owner.
     function set(
         uint256 _pid,
         uint256 _allocPoint,
@@ -118,23 +115,6 @@ contract NFTYieldFarming is Ownable {
             _allocPoint
         );
         poolInfo[_pid].allocPoint = _allocPoint;
-    }
-
-    // Set the migrator contract. Can only be called by the owner.
-    function setMigrator(IMigratorChef _migrator) public onlyOwner {
-        migrator = _migrator;
-    }
-
-    // Migrate lp token to another lp contract. Can be called by anyone. We trust that migrator contract is good.
-    function migrate(uint256 _pid) public {
-        require(address(migrator) != address(0), "migrate: no migrator");
-        PoolInfo storage pool = poolInfo[_pid];
-        IERC20 lpToken = pool.lpToken;
-        uint256 bal = lpToken.balanceOf(address(this));
-        lpToken.safeApprove(address(migrator), bal);
-        IERC20 newLpToken = migrator.migrate(lpToken);
-        require(bal == newLpToken.balanceOf(address(this)), "migrate: bad");
-        pool.lpToken = newLpToken;
     }
 
     // Return reward multiplier over the given _from to _to block.
@@ -155,28 +135,28 @@ contract NFTYieldFarming is Ownable {
         }
     }
 
-    // View function to see pending SUSHIs on frontend.
-    function pendingSushi(uint256 _pid, address _user)
+    // View function to see pending GovernanceTokens on frontend.
+    function pendingGovernanceToken(uint256 _pid, address _user)
         external
         view
         returns (uint256)
     {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];
-        uint256 accSushiPerShare = pool.accSushiPerShare;
+        uint256 accGovernanceTokenPerShare = pool.accGovernanceTokenPerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
             uint256 multiplier =
                 getMultiplier(pool.lastRewardBlock, block.number);
-            uint256 sushiReward =
-                multiplier.mul(sushiPerBlock).mul(pool.allocPoint).div(
+            uint256 governanceTokenReward =
+                multiplier.mul(governanceTokenPerBlock).mul(pool.allocPoint).div(
                     totalAllocPoint
                 );
-            accSushiPerShare = accSushiPerShare.add(
-                sushiReward.mul(1e12).div(lpSupply)
+            accGovernanceTokenPerShare = accGovernanceTokenPerShare.add(
+                governanceTokenReward.mul(1e12).div(lpSupply)
             );
         }
-        return user.amount.mul(accSushiPerShare).div(1e12).sub(user.rewardDebt);
+        return user.amount.mul(accGovernanceTokenPerShare).div(1e12).sub(user.rewardDebt);
     }
 
     // Update reward vairables for all pools. Be careful of gas spending!
@@ -199,29 +179,29 @@ contract NFTYieldFarming is Ownable {
             return;
         }
         uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-        uint256 sushiReward =
-            multiplier.mul(sushiPerBlock).mul(pool.allocPoint).div(
+        uint256 governanceTokenReward =
+            multiplier.mul(governanceTokenPerBlock).mul(pool.allocPoint).div(
                 totalAllocPoint
             );
-        sushi.mint(devaddr, sushiReward.div(10));
-        sushi.mint(address(this), sushiReward);
-        pool.accSushiPerShare = pool.accSushiPerShare.add(
-            sushiReward.mul(1e12).div(lpSupply)
+        governanceToken.mint(devaddr, governanceTokenReward.div(10));
+        governanceToken.mint(address(this), governanceTokenReward);
+        pool.accGovernanceTokenPerShare = pool.accGovernanceTokenPerShare.add(
+            governanceTokenReward.mul(1e12).div(lpSupply)
         );
         pool.lastRewardBlock = block.number;
     }
 
-    // Deposit LP tokens to MasterChef for SUSHI allocation.
+    // Deposit LP tokens to MasterChef for GovernanceToken allocation.
     function deposit(uint256 _pid, uint256 _amount) public {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         updatePool(_pid);
         if (user.amount > 0) {
             uint256 pending =
-                user.amount.mul(pool.accSushiPerShare).div(1e12).sub(
+                user.amount.mul(pool.accGovernanceTokenPerShare).div(1e12).sub(
                     user.rewardDebt
                 );
-            safeSushiTransfer(msg.sender, pending);
+            safeGovernanceTokenTransfer(msg.sender, pending);
         }
         pool.lpToken.safeTransferFrom(
             address(msg.sender),
@@ -229,7 +209,7 @@ contract NFTYieldFarming is Ownable {
             _amount
         );
         user.amount = user.amount.add(_amount);
-        user.rewardDebt = user.amount.mul(pool.accSushiPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(pool.accGovernanceTokenPerShare).div(1e12);
         emit Deposit(msg.sender, _pid, _amount);
     }
 
@@ -240,12 +220,12 @@ contract NFTYieldFarming is Ownable {
         require(user.amount >= _amount, "withdraw: not good");
         updatePool(_pid);
         uint256 pending =
-            user.amount.mul(pool.accSushiPerShare).div(1e12).sub(
+            user.amount.mul(pool.accGovernanceTokenPerShare).div(1e12).sub(
                 user.rewardDebt
             );
-        safeSushiTransfer(msg.sender, pending);
+        safeGovernanceTokenTransfer(msg.sender, pending);
         user.amount = user.amount.sub(_amount);
-        user.rewardDebt = user.amount.mul(pool.accSushiPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(pool.accGovernanceTokenPerShare).div(1e12);
         pool.lpToken.safeTransfer(address(msg.sender), _amount);
         emit Withdraw(msg.sender, _pid, _amount);
     }
@@ -260,13 +240,13 @@ contract NFTYieldFarming is Ownable {
         user.rewardDebt = 0;
     }
 
-    // Safe sushi transfer function, just in case if rounding error causes pool to not have enough SUSHIs.
-    function safeSushiTransfer(address _to, uint256 _amount) internal {
-        uint256 sushiBal = sushi.balanceOf(address(this));
-        if (_amount > sushiBal) {
-            sushi.transfer(_to, sushiBal);
+    // Safe GovernanceToken transfer function, just in case if rounding error causes pool to not have enough GovernanceToken.
+    function safeGovernanceTokenTransfer(address _to, uint256 _amount) internal {
+        uint256 governanceTokenBal = governanceToken.balanceOf(address(this));
+        if (_amount > governanceTokenBal) {
+            governanceToken.transfer(_to, governanceTokenBal);
         } else {
-            sushi.transfer(_to, _amount);
+            governanceToken.transfer(_to, _amount);
         }
     }
 
