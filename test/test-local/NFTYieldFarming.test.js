@@ -113,9 +113,12 @@ contract("NFTYieldFarming", function(accounts) {
             console.log('=== governanceTokenBalance ===', String(governanceTokenBalance));
         });
 
-        it("Claim specified amount of LP tokens and receive reward tokens", async () => {});
+        it("Un-stake and withdraw specified amount of LP tokens and receive reward tokens", async () => {
+            const _nftPoolId = 0;
+            const _unStakeAmount = web3.utils.toWei('50', 'ether');  /// 50 LP Token
 
-        it("Claim specified amount of LP tokens and receive reward tokens", async () => {});
+            let txReceipt1 = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: user2 });
+        });
     });
 
     describe("Process of the NFT yield farming (in case all staked-LP tokens are withdrawn)", () => {
