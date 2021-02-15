@@ -10,8 +10,8 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
  */
 contract GovernanceToken is ERC20, Ownable {
     constructor() public ERC20("Governance Token", "GOV") {
-        uint256 initialSupply = 1e8 * 1e18;  /// 1 milion MLP-V1
-        _mint(msg.sender, initialSupply);
+        // uint256 initialSupply = 1e8 * 1e18;  /// 1 milion MLP-V1
+        // _mint(msg.sender, initialSupply);
     }
 
     function mint(address _to, uint256 _amount) public onlyOwner {
