@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.12;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/EnumerableSet.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "./GovernanceToken.sol";
+import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import { EnumerableSet } from "@openzeppelin/contracts/utils/EnumerableSet.sol";
+import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { GovernanceToken } from "./GovernanceToken.sol";
+
 
 // NFTYieldFarming is the master of GovernanceToken. He can make GovernanceToken and he is a fair guy.
 contract NFTYieldFarming is Ownable {
@@ -21,13 +23,14 @@ contract NFTYieldFarming is Ownable {
 
     // Info of each NFT pool.
     struct NFTPoolInfo {
-        IERC20 lpToken; // Address of LP token contract.
-        uint256 allocPoint; // How many allocation points assigned to this pool. GovernanceTokens to distribute per block.
+        IERC721 nftToken;   /// NFT token as a target to stake
+        IERC20 lpToken;      /// LP token to should stake
+        uint256 allocPoint;  /// How many allocation points assigned to this pool. GovernanceTokens to distribute per block.
         uint256 lastRewardBlock; // Last block number that GovernanceTokens distribution occurs.
         uint256 accGovernanceTokenPerShare; // Accumulated GovernanceTokens per share, times 1e12. See below.
     }
     
-    // The Governance Token!
+    // The Governance Token
     GovernanceToken public governanceToken;
     
     // Dev address.
@@ -82,8 +85,9 @@ contract NFTYieldFarming is Ownable {
     // Add a new lp to the pool. Can only be called by the owner.
     // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
     function add(
+        IERC721 _nftToken,   /// NFT token as a target to stake
+        IERC20 _lpToken,     /// LP token to should stake
         uint256 _allocPoint,
-        IERC20 _lpToken,
         bool _withUpdate
     ) public onlyOwner {
         if (_withUpdate) {
@@ -94,6 +98,7 @@ contract NFTYieldFarming is Ownable {
         totalAllocPoint = totalAllocPoint.add(_allocPoint);
         nftPoolInfo.push(
             NFTPoolInfo({
+                nftToken: _nftToken,
                 lpToken: _lpToken,
                 allocPoint: _allocPoint,
                 lastRewardBlock: lastRewardBlock,
@@ -191,7 +196,7 @@ contract NFTYieldFarming is Ownable {
         pool.lastRewardBlock = block.number;
     }
 
-    // Deposit LP tokens to MasterChef for GovernanceToken allocation.
+    // Deposit LP tokens to the NFTYieldFarming contract for GovernanceToken allocation.
     function deposit(uint256 _pid, uint256 _amount) public {
         NFTPoolInfo storage pool = nftPoolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
@@ -213,7 +218,7 @@ contract NFTYieldFarming is Ownable {
         emit Deposit(msg.sender, _pid, _amount);
     }
 
-    // Withdraw LP tokens from MasterChef.
+    // Withdraw LP tokens from the NFTYieldFarming contract.
     function withdraw(uint256 _pid, uint256 _amount) public {
         NFTPoolInfo storage pool = nftPoolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
