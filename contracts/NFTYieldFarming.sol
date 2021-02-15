@@ -21,7 +21,6 @@ contract NFTYieldFarming is Ownable {
     
     struct NFTInfo {
         address contractAddress;
-        uint256 id;             // NFT id
         uint256 remaining;      // NFTs remaining to farm
         uint256 price;          // points required to claim NFT
     }
@@ -43,18 +42,11 @@ contract NFTYieldFarming is Ownable {
      */
     function addNFT(
         address contractAddress,    // Only ERC721 NFT Supported!
-        uint256 id,
         uint256 total,              // amount of NFTs deposited to farm (need to approve before)
         uint256 price
     ) external onlyOwner {
-        IERC721(contractAddress).safeTransferFrom(
-            msg.sender,
-            address(this),
-            id
-        );
         nftInfo.push(NFTInfo({
-            contractAddress: contractAddress,
-            id: id,
+            contractAddress: contractAddress,  /// ERC721 NFT contract address
             remaining: total,
             price: price
         }));
@@ -87,13 +79,6 @@ contract NFTYieldFarming is Ownable {
         // deduct points
         user.points = earned(msg.sender).sub(nft.price.mul(_quantity));
         user.lastUpdateAt = now;
-        
-        // transfer nft
-        IERC721(nft.contractAddress).safeTransferFrom(
-            address(this),
-            msg.sender,
-            nft.id
-        );
         
         nft.remaining = nft.remaining.sub(_quantity);
     }
