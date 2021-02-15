@@ -95,6 +95,15 @@ contract("NFTYieldFarming", function(accounts) {
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
         });
 
+        it("Advance block to 501", async () => {
+            await time.advanceBlockTo("501");
+
+            let currentBlock = await time.latestBlock();
+            console.log('=== currentBlock ===', String(currentBlock));
+        });
+
+        it("Claim specified amount of LP tokens and receive reward tokens", async () => {});
+
         it("Claim specified amount of LP tokens and receive reward tokens", async () => {});
     });
 
