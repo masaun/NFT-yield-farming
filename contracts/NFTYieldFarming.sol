@@ -235,16 +235,6 @@ contract NFTYieldFarming is Ownable {
         emit Withdraw(msg.sender, _pid, _amount);
     }
 
-    // Withdraw without caring about rewards. EMERGENCY ONLY.
-    function emergencyWithdraw(uint256 _pid) public {
-        NFTPoolInfo storage pool = nftPoolInfo[_pid];
-        UserInfo storage user = userInfo[_pid][msg.sender];
-        pool.lpToken.safeTransfer(address(msg.sender), user.amount);
-        emit EmergencyWithdraw(msg.sender, _pid, user.amount);
-        user.amount = 0;
-        user.rewardDebt = 0;
-    }
-
     // Safe GovernanceToken transfer function, just in case if rounding error causes pool to not have enough GovernanceToken.
     function safeGovernanceTokenTransfer(address _to, uint256 _amount) internal {
         uint256 governanceTokenBal = governanceToken.balanceOf(address(this));
