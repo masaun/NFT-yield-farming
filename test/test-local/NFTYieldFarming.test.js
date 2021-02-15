@@ -79,8 +79,12 @@ contract("NFTYieldFarming", function(accounts) {
     });
 
     describe("Process of the NFT yield farming (in case all staked-LP tokens are not withdrawn)", () => {
-        it("Add NFT as a target", async () => {
-            //let txReceipt = await nftYieldFarming.addNFT(NFT_TOKEN, total, price, { from: deployer });
+        it("Add a new NFT Pool as a target", async () => {
+            const _nftToken = NFT_TOKEN;  /// NFT token as a target to stake
+            const _lpToken = LP_TOKEN;    /// LP token to be staked
+            const _allocPoint = "100";
+            const _withUpdate = true;    
+            let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer });
         });
 
         it("Stake LP tokens to the NFT", async () => {});
