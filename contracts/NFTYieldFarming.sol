@@ -79,7 +79,7 @@ contract NFTYieldFarming is Ownable {
 
     // Add a new lp to the pool. Can only be called by the owner.
     // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
-    function add(
+    function addNFTPool(
         IERC721 _nftToken,   /// NFT token as a target to stake
         IERC20 _lpToken,     /// LP token to be staked
         uint256 _allocPoint,
@@ -103,8 +103,8 @@ contract NFTYieldFarming is Ownable {
         totalAllocPoint = totalAllocPoint.add(_allocPoint);
     }
 
-    // Update the given pool's GovernanceToken allocation point. Can only be called by the owner.
-    function set(
+    // Update the given NFT pool's GovernanceToken allocation point. Can only be called by the owner.
+    function setNFTPool(
         uint256 _pid,
         uint256 _allocPoint,
         bool _withUpdate
