@@ -9,29 +9,27 @@ const { time } = require('@openzeppelin/test-helpers');
 const NFTYieldFarming = artifacts.require("NFTYieldFarming");
 const NFTToken = artifacts.require("MockNFTToken");  /// As a NFT token (ERC1155)
 const LPToken = artifacts.require("MockLPToken");    /// As a LP token
-const GovernanceToken = artifacts.require("GovernanceToken");  /// As a reward token and a governance token
+
 
 /***
- * @dev - Execution COMMAND: $ truffle test ./test/test-local/NFTYieldFarming.test.js
+ * @dev - Execution COMMAND: $ truffle test ./test/test-local/NFTYieldFarmingERC721.test.js
  **/
-contract("NFTYieldFarming", function(accounts) {
+contract("NFTYieldFarming (ERC721)", function(accounts) {
     /// Acccounts
     let deployer = accounts[0];
-    let admin = accounts[1];
-    let user1 = accounts[2];
-    let user2 = accounts[3];
+    let user1 = accounts[1];
+    let user2 = accounts[2];
+    let user3 = accounts[3];
 
     /// Global contract instance
     let nftYieldFarming;
     let nftToken;
     let lpToken;
-    let governanceToken;
 
     /// Global variable for each contract addresses
     let NFT_YIELD_FARMING;
     let NFT_TOKEN;
     let LP_TOKEN;
-    let GOVERNANCE_TOKEN;
 
     describe("Check state in advance", () => {
         it("Check all accounts", async () => {
@@ -50,18 +48,9 @@ contract("NFTYieldFarming", function(accounts) {
             LP_TOKEN = lpToken.address;
         });
 
-        it("Deploy the Governance token (ERC20) contract instance", async () => {
-            governanceToken = await GovernanceToken.new({ from: deployer });
-            GOVERNANCE_TOKEN = governanceToken.address;
-        });
-
         it("Deploy the NFTYieldFarming contract instance", async () => {
-            const _devaddr = admin;  /// Admin address
-            const _governanceTokenPerBlock = "100";
-            const _startBlock = "100";
-            const _bonusEndBlock = "1000";
-
-            nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
+            const _emissionRate = 10;   /// [Todo]: 10%
+            nftYieldFarming = await NFTYieldFarming.new(_emissionRate, LP_TOKEN, { from: deployer });
             NFT_YIELD_FARMING = nftYieldFarming.address;
         });
     });
@@ -72,6 +61,12 @@ contract("NFTYieldFarming", function(accounts) {
             let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
         });
 
+        // it("[Ownable]: Transfers ownership of the NFTYieldFarming contract to a new account (admin)", async () => {
+        //     let txReceipt = await nftYieldFarming.transferOwnership(user1, { from: deployer });
+        //     const newOwner = await nftYieldFarming.owner({ from: deployer });
+        //     console.log('=== newOwner ===', newOwner);
+        // });
+
         it("Transfer the LP token (ERC20) from deployer to user1", async () => {
             const amount = web3.utils.toWei('1000', 'ether');
             let txReceipt = await lpToken.transfer(user1, amount, { from: deployer });
@@ -80,7 +75,11 @@ contract("NFTYieldFarming", function(accounts) {
 
     describe("Process of the NFT yield farming (in case all staked-LP tokens are not withdrawn)", () => {
         it("Add NFT as a target", async () => {
-            //let txReceipt = await nftYieldFarming.addNFT(NFT_TOKEN, total, price, { from: deployer });
+            const total = 1;
+            const price = web3.utils.toWei('100', 'ether');
+
+            //let txReceipt1 = await nftToken.approve(NFT_YIELD_FARMING, tokenId, { from: deployer });
+            let txReceipt2 = await nftYieldFarming.addNFT(NFT_TOKEN, total, price, { from: deployer });
         });
 
         it("Stake LP tokens to the NFT", async () => {});
