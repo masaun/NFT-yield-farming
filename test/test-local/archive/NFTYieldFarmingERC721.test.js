@@ -12,7 +12,7 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'
 const { time } = require('@openzeppelin/test-helpers');
 
 /// Artifact of smart contracts 
-const NFTYieldFarming = artifacts.require("NFTYieldFarming");
+const NFTYieldFarming = artifacts.require("NFTYieldFarmingERC721");
 const NFTToken = artifacts.require("MockNFTToken");  /// As a NFT token (ERC1155)
 const LPToken = artifacts.require("MockLPToken");    /// As a LP token
 
