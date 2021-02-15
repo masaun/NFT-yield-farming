@@ -87,7 +87,13 @@ contract("NFTYieldFarming", function(accounts) {
             let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer });
         });
 
-        it("Stake LP tokens to the NFT", async () => {});
+        it("Stake LP tokens to the NFT", async () => {
+            const _nftPoolId = 0;
+            const _stakeAmount = web3.utils.toWei('100', 'ether');  /// 100 LP Token
+
+            let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
+            let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
+        });
 
         it("Claim specified amount of LP tokens and receive reward tokens", async () => {});
     });
