@@ -80,13 +80,6 @@ contract NFTYieldFarming is Ownable {
         user.points = earned(msg.sender).sub(nft.price.mul(_quantity));
         user.lastUpdateAt = now;
         
-        // transfer nft
-        IERC721(nft.contractAddress).safeTransferFrom(
-            address(this),
-            msg.sender,
-            nft.id
-        );
-        
         nft.remaining = nft.remaining.sub(_quantity);
     }
     
