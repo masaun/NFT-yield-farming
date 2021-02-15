@@ -47,13 +47,8 @@ contract NFTYieldFarming is Ownable {
         uint256 total,              // amount of NFTs deposited to farm (need to approve before)
         uint256 price
     ) external onlyOwner {
-        IERC721(contractAddress).safeTransferFrom(
-            msg.sender,
-            address(this),
-            id
-        );
         nftInfo.push(NFTInfo({
-            contractAddress: contractAddress,
+            contractAddress: contractAddress,  /// ERC721 NFT contract address
             id: id,
             remaining: total,
             price: price

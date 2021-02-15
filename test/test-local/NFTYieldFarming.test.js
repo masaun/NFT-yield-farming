@@ -58,8 +58,14 @@ contract("NFTYieldFarming", function(accounts) {
     describe("Preparation for tests in advance", () => {
         it("Mint the NFT token (ERC721) to user1", async () => {
             const tokenURI = "https://testnft.example/token-id-8u5h2m.json";
-            let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: user1 });
+            let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
         });
+
+        // it("[Ownable]: Transfers ownership of the NFTYieldFarming contract to a new account (admin)", async () => {
+        //     let txReceipt = await nftYieldFarming.transferOwnership(user1, { from: deployer });
+        //     const newOwner = await nftYieldFarming.owner({ from: deployer });
+        //     console.log('=== newOwner ===', newOwner);
+        // });
 
         it("Transfer the LP token (ERC20) from deployer to user1", async () => {
             const amount = web3.utils.toWei('1000', 'ether');
@@ -73,7 +79,7 @@ contract("NFTYieldFarming", function(accounts) {
             const total = 1;
             const price = web3.utils.toWei('100', 'ether');
 
-            let txReceipt1 = await nftToken.approve(NFT_YIELD_FARMING, tokenId, { from: deployer });
+            //let txReceipt1 = await nftToken.approve(NFT_YIELD_FARMING, tokenId, { from: deployer });
             let txReceipt2 = await nftYieldFarming.addNFT(NFT_TOKEN, tokenId, total, price, { from: deployer });
         });
 
