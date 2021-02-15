@@ -21,7 +21,6 @@ contract NFTYieldFarming is Ownable {
     
     struct NFTInfo {
         address contractAddress;
-        uint256 id;             // NFT id
         uint256 remaining;      // NFTs remaining to farm
         uint256 price;          // points required to claim NFT
     }
@@ -43,13 +42,11 @@ contract NFTYieldFarming is Ownable {
      */
     function addNFT(
         address contractAddress,    // Only ERC721 NFT Supported!
-        uint256 id,
         uint256 total,              // amount of NFTs deposited to farm (need to approve before)
         uint256 price
     ) external onlyOwner {
         nftInfo.push(NFTInfo({
             contractAddress: contractAddress,  /// ERC721 NFT contract address
-            id: id,
             remaining: total,
             price: price
         }));
