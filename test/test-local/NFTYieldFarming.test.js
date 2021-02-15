@@ -117,7 +117,6 @@ contract("NFTYieldFarming", function(accounts) {
         it("Un-stake and withdraw specified amount of LP tokens and receive reward tokens", async () => {
             const _nftPoolId = 0;
             const _unStakeAmount = web3.utils.toWei('50', 'ether');  /// 50 LP Token
-
             let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: user1 });
         });
     });
