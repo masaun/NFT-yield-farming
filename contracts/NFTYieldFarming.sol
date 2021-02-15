@@ -33,7 +33,7 @@ contract NFTYieldFarming is Ownable {
     // The Governance Token
     GovernanceToken public governanceToken;
     
-    // Dev address.
+    // Dev address. (Admin address)
     address public devaddr;
     
     // Block number when bonus GovernanceToken period ends.
@@ -66,7 +66,7 @@ contract NFTYieldFarming is Ownable {
 
     constructor(
         GovernanceToken _governanceToken,
-        address _devaddr,
+        address _devaddr,  /// Admin address
         uint256 _governanceTokenPerBlock,
         uint256 _startBlock,
         uint256 _bonusEndBlock
@@ -78,7 +78,7 @@ contract NFTYieldFarming is Ownable {
         startBlock = _startBlock;
     }
 
-    function poolLength() external view returns (uint256) {
+    function nftPoolLength() external view returns (uint256) {
         return nftPoolInfo.length;
     }
 
