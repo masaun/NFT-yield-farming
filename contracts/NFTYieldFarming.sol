@@ -10,7 +10,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { GovernanceToken } from "./GovernanceToken.sol";
 
 
-// NFTYieldFarming is the master of GovernanceToken. He can make GovernanceToken and he is a fair guy.
+// NFTYieldFarming is the master contract of GovernanceToken. This contract can make GovernanceToken.
 contract NFTYieldFarming is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
