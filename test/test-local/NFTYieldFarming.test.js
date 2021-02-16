@@ -203,7 +203,7 @@ contract("NFTYieldFarming", function(accounts) {
             let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: user1 });
             console.log('=== GovernanceToken balance of the NFTYieldFarming contract ===', String(governanceTokenBalance));
             assert.equal(
-                governanceTokenBalanceOfUser1,
+                governanceTokenBalance,
                 "4334",
                 "GovernanceToken balance of the NFTYieldFarming contract should be 4334 (at block 321)"
             );
