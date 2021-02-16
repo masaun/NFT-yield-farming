@@ -56,9 +56,10 @@ contract("NFTYieldFarming", function(accounts) {
         });
 
         it("Deploy the NFTYieldFarming contract instance", async () => {
+            /// [Note]: 100 per block farming rate starting at block 300 with bonus until block 1000
             const _devaddr = admin;  /// Admin address
             const _governanceTokenPerBlock = "100";
-            const _startBlock = "100";
+            const _startBlock = "300";
             const _bonusEndBlock = "1000";
 
             nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
@@ -66,6 +67,10 @@ contract("NFTYieldFarming", function(accounts) {
         });
 
         it("Transfer ownership of the Governance token (ERC20) contract to the NFTYieldFarming contract", async () => {
+            /// [Test]: Mint
+            // const _mintAmount = web3.utils.toWei('100', 'ether');
+            // await governanceToken.mint(user1, _mintAmount, { from: deployer});
+
             const newOwner = NFT_YIELD_FARMING;
             const txReceipt = await governanceToken.transferOwnership(newOwner, { from: deployer });
         });        
@@ -93,7 +98,11 @@ contract("NFTYieldFarming", function(accounts) {
             let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer });
         });
 
-        it("Stake LP tokens to the NFT", async () => {
+        it("Stake LP tokens to the NFT (User1 stake 10 LP tokens at block 310)", async () => {
+            /// [Note]: Block to mint the GovernanceToken start from block 300.
+            /// User1 stake (deposit) 10 LP tokens at block 310.
+            await time.advanceBlockTo("309");
+
             const _nftPoolId = 0;
             const _stakeAmount = web3.utils.toWei('100', 'ether');  /// 100 LP Token
 
@@ -101,22 +110,43 @@ contract("NFTYieldFarming", function(accounts) {
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
         });
 
-        it("Advance block to 1359", async () => {
-            await time.advanceBlockTo("1359");
+        it("Stake LP tokens to the NFT (User1 stake 10 LP tokens at block 320)", async () => {
+            /// [Note]: Block to mint the GovernanceToken start from block 300.
+            /// User1 stake (deposit) 10 LP tokens at block 320.
+            await time.advanceBlockTo("319");
 
+            const _nftPoolId = 0;
+            const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
+
+            let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
+            let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
+        });
+
+
+        it("Current block should be at block 321", async () => {
             let currentBlock = await time.latestBlock();
             console.log('=== currentBlock ===', String(currentBlock));
 
             assert.equal(
                 currentBlock,
-                "1359",
-                "Current block should be 110"
+                "321",
+                "Current block should be 321"
             );
         });
 
-        it("GovernanceToken balance should be more than 0", async () => {
-            let governanceTokenBalance = await governanceToken.totalSupply({ from: user1 });
-            console.log('=== governanceTokenBalance ===', String(governanceTokenBalance));
+        it("Total Supply of the GovernanceToken should be 11000 (at block 321)", async () => {
+            ///  At this point (At block 321): 
+            ///      TotalSupply of GovernanceToken: 1000 * (321 - 310) = 11000
+            ///      User1 should have: 4*1000 + 4*1/3*1000 + 2*1/6*1000 = 5666
+            ///      NFTYieldFarming contract should have the remaining: 10000 - 5666 = 4334
+            let totalSupplyOfGovernanceToken = await governanceToken.totalSupply();
+            console.log('=== totalSupplyOfGovernanceToken ===', String(totalSupplyOfGovernanceToken));
+
+            assert.equal(
+                totalSupplyOfGovernanceToken,
+                "11000",
+                "Total supply of the Governance tokens (at block 321) should be 11000"
+            );
         });
 
         it("Un-stake and withdraw specified amount of LP tokens and receive reward tokens", async () => {
