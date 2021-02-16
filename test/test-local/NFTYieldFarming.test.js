@@ -180,6 +180,11 @@ contract("NFTYieldFarming", function(accounts) {
             console.log('=== GovernanceToken balance of user1 ===', String(governanceTokenBalanceOfUser1));
         });
 
+        it("GovernanceToken balance of the NFTYieldFarming contract should be 4334 (at block 321)", async () => {
+            let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: user1 });
+            console.log('=== GovernanceToken balance of the NFTYieldFarming contract ===', String(governanceTokenBalance));
+        });
+
         it("Un-stake and withdraw specified amount of LP tokens and receive reward tokens", async () => {
             const _nftPoolId = 0;
             const _unStakeAmount = web3.utils.toWei('50', 'ether');  /// 50 LP Token
