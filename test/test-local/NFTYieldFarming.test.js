@@ -59,7 +59,8 @@ contract("NFTYieldFarming", function(accounts) {
         it("Deploy the NFTYieldFarming contract instance", async () => {
             /// [Note]: 100 per block farming rate starting at block 300 with bonus until block 1000
             const _devaddr = admin;  /// Admin address
-            const _governanceTokenPerBlock = "100";
+            const _governanceTokenPerBlock = web3.utils.toWei("100", "ether");  /// [Note]: This unit is amount. Not blockNumber
+            //const _governanceTokenPerBlock = "100";
             const _startBlock = "300";
             const _bonusEndBlock = "1000";
 
@@ -106,8 +107,8 @@ contract("NFTYieldFarming", function(accounts) {
             await time.advanceBlockTo("309");
 
             const _nftPoolId = 0;
-            const _stakeAmount = "10";  /// 10 LP Token
-            //const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
+            //const _stakeAmount = "10";  /// 10 LP Token
+            const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
 
             let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
@@ -119,8 +120,8 @@ contract("NFTYieldFarming", function(accounts) {
             await time.advanceBlockTo("313");
 
             const _nftPoolId = 0;
-            const _stakeAmount = "20";  /// 20 LP Token
-            //const _stakeAmount = web3.utils.toWei('20', 'ether');  /// 20 LP Token
+            //const _stakeAmount = "20";  /// 20 LP Token
+            const _stakeAmount = web3.utils.toWei('20', 'ether');  /// 20 LP Token
 
             let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user2 });
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user2 });
@@ -132,8 +133,8 @@ contract("NFTYieldFarming", function(accounts) {
             await time.advanceBlockTo("317");
 
             const _nftPoolId = 0;
-            const _stakeAmount = "30";  /// 30 LP Token
-            //const _stakeAmount = web3.utils.toWei('30', 'ether');  /// 30 LP Token
+            //const _stakeAmount = "30";  /// 30 LP Token
+            const _stakeAmount = web3.utils.toWei('30', 'ether');  /// 30 LP Token
 
             let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user3 });
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user3 });
@@ -145,8 +146,8 @@ contract("NFTYieldFarming", function(accounts) {
             await time.advanceBlockTo("319");
 
             const _nftPoolId = 0;
-            const _stakeAmount = "10";  /// 10 LP Token
-            //const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
+            //const _stakeAmount = "10";  /// 10 LP Token
+            const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
 
             let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
@@ -213,8 +214,8 @@ contract("NFTYieldFarming", function(accounts) {
             /// [Note]: Total LPs amount staked of user1 is 20 LP tokens at block 321.
             /// [Note]: Therefore, maximum withdraw amount for user1 is 20 LPs
             const _nftPoolId = 0;
-            const _unStakeAmount = "10";  /// 10 LP Token 
-            //const _unStakeAmount = web3.utils.toWei('50', 'ether');  /// 50 LP Token
+            //const _unStakeAmount = "10";  /// 10 LP Token 
+            const _unStakeAmount = web3.utils.toWei('50', 'ether');  /// 50 LP Token
             let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: user1 });
         
             let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 });
