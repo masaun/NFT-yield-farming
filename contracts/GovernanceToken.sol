@@ -14,7 +14,7 @@ contract GovernanceToken is ERC20, Ownable {
         // _mint(msg.sender, initialSupply);
     }
 
-    function mint(address _to, uint256 _amount) public {
+    function mint(address _to, uint256 _amount) public onlyOwner {
         _mint(_to, _amount);
     }
 

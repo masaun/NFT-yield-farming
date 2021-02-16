@@ -64,6 +64,11 @@ contract("NFTYieldFarming", function(accounts) {
             nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
             NFT_YIELD_FARMING = nftYieldFarming.address;
         });
+
+        it("Transfer ownership of the Governance token (ERC20) contract to the NFTYieldFarming contract", async () => {
+            const newOwner = NFT_YIELD_FARMING;
+            const txReceipt = await governanceToken.transferOwnership(newOwner, { from: deployer });
+        });        
     });
 
     describe("Preparation for tests in advance", () => {
