@@ -103,20 +103,6 @@ contract NFTYieldFarming is Ownable {
         totalAllocPoint = totalAllocPoint.add(_allocPoint);
     }
 
-    // Update the given NFT pool's GovernanceToken allocation point. Can only be called by the owner.
-    function setNFTPool(
-        uint256 _pid,
-        uint256 _allocPoint,
-        bool _withUpdate
-    ) public onlyOwner {
-        if (_withUpdate) {
-            massUpdatePools();
-        }
-
-        totalAllocPoint = totalAllocPoint.sub(nftPoolInfo[_pid].allocPoint).add(_allocPoint);
-        nftPoolInfo[_pid].allocPoint = _allocPoint;
-    }
-
     // Return reward multiplier over the given _from to _to block.
     function getMultiplier(uint256 _from, uint256 _to)
         public
