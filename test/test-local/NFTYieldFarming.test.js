@@ -173,19 +173,19 @@ contract("NFTYieldFarming", function(accounts) {
             let totalSupplyOfGovernanceToken = await governanceToken.totalSupply();
             console.log('=== totalSupplyOfGovernanceToken ===', String(totalSupplyOfGovernanceToken));
             assert.equal(
-                totalSupplyOfGovernanceToken,
-                "11000",
+                Math.round(web3.utils.fromWei(totalSupplyOfGovernanceToken, 'ether')),
+                11000,  /// [Note]: This is amount value rounded.
                 "Total supply of the Governance tokens (at block 321) should be 11000"
             );
         });
 
-        it("GovernanceToken balance of user1 should be 5666 (at block 321)", async () => {
+        it("GovernanceToken balance of user1 should be 5667 (at block 321)", async () => {
             let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 });
             console.log('=== GovernanceToken balance of user1 ===', String(governanceTokenBalanceOfUser1));
             assert.equal(
-                governanceTokenBalanceOfUser1,
-                "5666",
-                "GovernanceToken balance of user1 should be 5666 (at block 321)"
+                Math.round(web3.utils.fromWei(governanceTokenBalanceOfUser1, 'ether')),
+                5667,  /// [Note]: This is amount value rounded.
+                "GovernanceToken balance of user1 should be 5667 (at block 321)"
             );
         });
 
@@ -200,13 +200,13 @@ contract("NFTYieldFarming", function(accounts) {
             console.log('=== GovernanceToken balance of admin ===', String(governanceTokenBalanceOfAdmin));
         });
 
-        it("GovernanceToken balance of the NFTYieldFarming contract should be 4334 (at block 321)", async () => {
+        it("GovernanceToken balance of the NFTYieldFarming contract should be 4333 (at block 321)", async () => {
             let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: user1 });
             console.log('=== GovernanceToken balance of the NFTYieldFarming contract ===', String(governanceTokenBalance));
             assert.equal(
-                governanceTokenBalance,
-                "4334",
-                "GovernanceToken balance of the NFTYieldFarming contract should be 4334 (at block 321)"
+                Math.round(web3.utils.fromWei(governanceTokenBalance, 'ether')),
+                4333,  /// [Note]: This is amount value rounded.
+                "GovernanceToken balance of the NFTYieldFarming contract should be 4333 (at block 321)"
             );
         });
 
@@ -215,7 +215,7 @@ contract("NFTYieldFarming", function(accounts) {
             /// [Note]: Therefore, maximum withdraw amount for user1 is 20 LPs
             const _nftPoolId = 0;
             //const _unStakeAmount = "10";  /// 10 LP Token 
-            const _unStakeAmount = web3.utils.toWei('50', 'ether');  /// 50 LP Token
+            const _unStakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
             let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: user1 });
         
             let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 });
