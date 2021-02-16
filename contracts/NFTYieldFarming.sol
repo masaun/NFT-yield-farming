@@ -23,8 +23,8 @@ contract NFTYieldFarming is Ownable {
 
     // Info of each NFT pool.
     struct NFTPoolInfo {
-        IERC721 nftToken;   /// NFT token as a target to stake
-        IERC20 lpToken;      /// LP token to should stake
+        IERC721 nftToken;    /// NFT token as a target to stake
+        IERC20 lpToken;      /// LP token to be staked
         uint256 allocPoint;  /// How many allocation points assigned to this pool. GovernanceTokens to distribute per block.
         uint256 lastRewardBlock; // Last block number that GovernanceTokens distribution occurs.
         uint256 accGovernanceTokenPerShare; // Accumulated GovernanceTokens per share, times 1e12. See below.
@@ -58,11 +58,6 @@ contract NFTYieldFarming is Ownable {
     uint256 public startBlock;
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
-    event EmergencyWithdraw(
-        address indexed user,
-        uint256 indexed pid,
-        uint256 amount
-    );
 
     constructor(
         GovernanceToken _governanceToken,
@@ -84,18 +79,17 @@ contract NFTYieldFarming is Ownable {
 
     // Add a new lp to the pool. Can only be called by the owner.
     // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
-    function add(
+    function addNFTPool(
         IERC721 _nftToken,   /// NFT token as a target to stake
-        IERC20 _lpToken,     /// LP token to should stake
+        IERC20 _lpToken,     /// LP token to be staked
         uint256 _allocPoint,
         bool _withUpdate
     ) public onlyOwner {
         if (_withUpdate) {
             massUpdatePools();
         }
-        uint256 lastRewardBlock =
-            block.number > startBlock ? block.number : startBlock;
-        totalAllocPoint = totalAllocPoint.add(_allocPoint);
+
+        uint256 lastRewardBlock = block.number > startBlock ? block.number : startBlock;
         nftPoolInfo.push(
             NFTPoolInfo({
                 nftToken: _nftToken,
@@ -105,21 +99,8 @@ contract NFTYieldFarming is Ownable {
                 accGovernanceTokenPerShare: 0
             })
         );
-    }
 
-    // Update the given pool's GovernanceToken allocation point. Can only be called by the owner.
-    function set(
-        uint256 _pid,
-        uint256 _allocPoint,
-        bool _withUpdate
-    ) public onlyOwner {
-        if (_withUpdate) {
-            massUpdatePools();
-        }
-        totalAllocPoint = totalAllocPoint.sub(nftPoolInfo[_pid].allocPoint).add(
-            _allocPoint
-        );
-        nftPoolInfo[_pid].allocPoint = _allocPoint;
+        totalAllocPoint = totalAllocPoint.add(_allocPoint);
     }
 
     // Return reward multiplier over the given _from to _to block.
@@ -148,6 +129,7 @@ contract NFTYieldFarming is Ownable {
     {
         NFTPoolInfo storage pool = nftPoolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];
+
         uint256 accGovernanceTokenPerShare = pool.accGovernanceTokenPerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
@@ -161,6 +143,7 @@ contract NFTYieldFarming is Ownable {
                 governanceTokenReward.mul(1e12).div(lpSupply)
             );
         }
+
         return user.amount.mul(accGovernanceTokenPerShare).div(1e12).sub(user.rewardDebt);
     }
 
@@ -188,8 +171,8 @@ contract NFTYieldFarming is Ownable {
             multiplier.mul(governanceTokenPerBlock).mul(pool.allocPoint).div(
                 totalAllocPoint
             );
-        governanceToken.mint(devaddr, governanceTokenReward.div(10));
-        governanceToken.mint(address(this), governanceTokenReward);
+        governanceToken.mint(devaddr, governanceTokenReward.div(10));  /// [Note]: mint method can be used by 
+        governanceToken.mint(address(this), governanceTokenReward);    /// [Note]: mint method can be used by only owner
         pool.accGovernanceTokenPerShare = pool.accGovernanceTokenPerShare.add(
             governanceTokenReward.mul(1e12).div(lpSupply)
         );
@@ -244,6 +227,11 @@ contract NFTYieldFarming is Ownable {
             governanceToken.transfer(_to, _amount);
         }
     }
+
+
+    ///-----------------------------------------
+    /// Change an admin address
+    ///-----------------------------------------
 
     // Update dev address by the previous dev.
     function dev(address _devaddr) public {
