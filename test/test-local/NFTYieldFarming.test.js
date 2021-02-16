@@ -20,6 +20,7 @@ contract("NFTYieldFarming", function(accounts) {
     let admin = accounts[1];
     let user1 = accounts[2];
     let user2 = accounts[3];
+    let user3 = accounts[4];
 
     /// Global contract instance
     let nftYieldFarming;
@@ -82,10 +83,11 @@ contract("NFTYieldFarming", function(accounts) {
             let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
         });
 
-        it("Transfer the LP token (ERC20) from deployer to user1", async () => {
+        it("Transfer the LP token (ERC20) from deployer to 3 users", async () => {
             const amount = web3.utils.toWei('1000', 'ether');
             let txReceipt1 = await lpToken.transfer(user1, amount, { from: deployer });
             let txReceipt2 = await lpToken.transfer(user2, amount, { from: deployer });
+            let txReceipt3 = await lpToken.transfer(user3, amount, { from: deployer });
         });
     });
 
@@ -110,7 +112,7 @@ contract("NFTYieldFarming", function(accounts) {
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
         });
 
-        it("User2 stake 10 LP tokens at block 314", async () => {
+        it("User2 stake 20 LP tokens at block 314", async () => {
             /// [Note]: Block to mint the GovernanceToken start from block 300.
             /// User2 stake (deposit) 20 LP tokens at block 314.
             await time.advanceBlockTo("313");
@@ -122,9 +124,21 @@ contract("NFTYieldFarming", function(accounts) {
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user2 });
         });
 
+        it("User3 stake 30 LP tokens at block 318", async () => {
+            /// [Note]: Block to mint the GovernanceToken start from block 300.
+            /// User3 stake (deposit) 30 LPs at block 318
+            await time.advanceBlockTo("317");
+
+            const _nftPoolId = 0;
+            const _stakeAmount = web3.utils.toWei('30', 'ether');  /// 30 LP Token
+
+            let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user3 });
+            let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user3 });
+        });
+
         it("User1 stake more 10 LP tokens at block 320", async () => {
             /// [Note]: Block to mint the GovernanceToken start from block 300.
-            /// User1 stake (deposit) 10 LP tokens at block 320.
+            /// User1 stake (deposit) 10 more LP tokens at block 320.
             await time.advanceBlockTo("319");
 
             const _nftPoolId = 0;
