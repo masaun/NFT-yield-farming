@@ -215,7 +215,7 @@ contract("NFTYieldFarming", function(accounts) {
             /// [Note]: Therefore, maximum withdraw amount for user1 is 20 LPs
             const _nftPoolId = 0;
             //const _unStakeAmount = "10";  /// 10 LP Token 
-            const _unStakeAmount = web3.utils.toWei('50', 'ether');  /// 50 LP Token
+            const _unStakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
             let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: user1 });
         
             let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 });
