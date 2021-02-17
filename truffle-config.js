@@ -5,13 +5,21 @@ const mnemonic = process.env.MNEMONIC;
 
 module.exports = {
   networks: {
-    bsc: {  /// Binance Smart Chain testnet
+    bsc_testnet: {  /// Binance Smart Chain testnet
+      provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s1.binance.org:8545`),
+      network_id: 97,
+      confirmations: 10,
+      timeoutBlocks: 200,
+      skipDryRun: true
+    },
+    bsc_mainnet: {  /// Binance Smart Chain mainnet
       provider: () => new HDWalletProvider(mnemonic, `https://bsc-dataseed1.binance.org`),
       network_id: 56,
       confirmations: 10,
       timeoutBlocks: 200,
       skipDryRun: true
     },
+
     ropsten: {
       provider: () => new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/v3/' + process.env.INFURA_KEY),
       network_id: '3',
