@@ -8,8 +8,10 @@
   "scripts": {
     "test": "truffle test ./test/test-local/*",
     "test:nft-yield-farming": "truffle test ./test/test-local/NFTYieldFarming.test.js",
+    "test:nft-yield-farming_bsc_testnet": "truffle test ./test/test-bsc/NFTYieldFarming.test.js",
     "compile:local": "truffle compile --reset --network local",
     "migrate:local": "truffle migrate --reset --network local",
+    "migrate:bsc_testnet": "truffle migrate --reset --network bsc_testnet",
     "start-blank": "rm -rf client/src && cp -rf barebones/src client/"
   },
   "author": "masaun",
