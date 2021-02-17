@@ -37,14 +37,21 @@ $ npm install
 
 <br>
 
-### ② Compile & migrate contracts (on local)
+### ② Compile & migrate contracts (on Locan or BSC testnet)
+- 1: Migrate on local
 ```
 $ npm run migrate:local
 ```
 
+- 2: Migrate on BSC testnet
+```
+$ npm run migrate:bsc_testnet
+```
+
+
 <br>
 
-### ③ Test (Mainnet-fork approach)
+### ③ Test
 - 1: Start ganache-cli
 ```
 $ ganache-cli -d
@@ -56,9 +63,16 @@ $ ganache-cli -d
 - 2: Execute test of the smart-contracts (on the local)
   - Test for the contract
     - `$ npm run test:nft-yield-farming`
-       ($ truffle test ./test/test-local/Referral.test.js)
+       ($ truffle test ./test/test-local/NFTYieldFarming.test.js)
 
 <br>
+
+- 3: Execute test of the smart-contracts (on the BSC testnet)
+    - `$ npm run test:nft-yield-farming_bsc_testnet`
+       ($ truffle test ./test/test-bsc/NFTYieldFarming.test.js)
+
+<br>
+
 
 ***
 
