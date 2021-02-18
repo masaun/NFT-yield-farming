@@ -68,7 +68,7 @@ $ ganache-cli -d
 <br>
 
 - 3: Execute test of the smart-contracts (on the BSC testnet)
-    - `$ npm run test:nft-yield-farming_bsc_testnet`
+    - `$ npm run test:nft-yield-farming_bsc-testnet`
        ($ truffle test ./test/test-bsc/NFTYieldFarming.test.js --network bsc_testnet)
 
 <br>
