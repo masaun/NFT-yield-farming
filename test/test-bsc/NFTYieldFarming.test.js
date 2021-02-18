@@ -7,8 +7,8 @@ const { time } = require('@openzeppelin/test-helpers');
 
 /// Artifact of smart contracts 
 const NFTYieldFarming = artifacts.require("NFTYieldFarming");
-const NFTToken = artifacts.require("MockNFTToken");  /// As a NFT token (ERC1155)
-const LPToken = artifacts.require("MockLPToken");    /// As a LP token
+const NFTToken = artifacts.require("MockNFTToken");  /// As a NFT token (ERC721)
+const LPToken = artifacts.require("MockLPToken");    /// As a LP token (BEP20)
 const GovernanceToken = artifacts.require("GovernanceToken");  /// As a reward token and a governance token
 
 /***
