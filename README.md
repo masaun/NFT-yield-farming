@@ -90,3 +90,9 @@ http://remix.ethereum.org/#optimize=false&runs=200&evmVersion=null&version=soljs
 https://github.com/binance-chain/bsc-develop-ecosystem/
   - BSC FAQ
 https://docs.google.com/document/d/1JF_P-AokXhSe38bNqLTNhlhKIu0JrcNRVReGdoBA-0o/edit?usp=sharing
+
+<br>
+
+- BSC
+  - BEP20Token.template: 
+    https://github.com/binance-chain/bsc-genesis-contract/blob/master/contracts/bep20_template/BEP20Token.template
