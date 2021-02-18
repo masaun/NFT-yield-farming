@@ -5,7 +5,7 @@ const mnemonic = process.env.MNEMONIC;
 
 module.exports = {
   networks: {
-    bsc_testnet: {
+    bsc_testnet: {  /// This is used for deployment and truffle test
       provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-2-s1.binance.org:8545`),
       network_id: 97,
       networkCheckTimeout: 9999,
@@ -20,6 +20,7 @@ module.exports = {
       timeoutBlocks: 200,
       skipDryRun: true
     },
+
     ropsten: {
       provider: () => new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/v3/' + process.env.INFURA_KEY),
       network_id: '3',
