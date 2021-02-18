@@ -1,6 +1,8 @@
-/// Using local network
+/// Using BSC testnet
 const Web3 = require('web3');
-const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
+//const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
+//const web3 = new Web3(new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID"));
+const web3 = new Web3(`https://data-seed-prebsc-2-s1.binance.org:8545`);
 
 /// Openzeppelin test-helper
 const { time } = require('@openzeppelin/test-helpers');
@@ -12,7 +14,7 @@ const LPToken = artifacts.require("MockLPToken");    /// As a LP token
 const GovernanceToken = artifacts.require("GovernanceToken");  /// As a reward token and a governance token
 
 /***
- * @dev - Execution COMMAND: $ truffle test ./test/test-local/NFTYieldFarming.test.js
+ * @dev - Execution COMMAND: $ truffle test ./test/test-bsc/NFTYieldFarming.test.js
  **/
 contract("NFTYieldFarming", function(accounts) {
     /// Acccounts
