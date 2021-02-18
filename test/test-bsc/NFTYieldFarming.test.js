@@ -1,10 +1,6 @@
 /// Using BSC testnet
 const Web3 = require('web3');
-//const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
-//const web3 = new Web3(new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID"));
-
-const web3 = new Web3('https://data-seed-prebsc-2-s1.binance.org:8545');
-//const web3 = new Web3(new Web3.providers.WebsocketProvider("wss://bsc-ws-node.nariox.org:443"));
+const web3 = new Web3('https://data-seed-prebsc-2-s1.binance.org:8545'); /// [Note]: Endpoing is the BSC testnet
 
 /// Openzeppelin test-helper
 const { time } = require('@openzeppelin/test-helpers');
