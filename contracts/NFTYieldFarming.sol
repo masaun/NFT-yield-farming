@@ -7,7 +7,7 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import { EnumerableSet } from "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { GovernanceToken } from "./GovernanceToken.sol";
+import { BEP20GovernanceToken } from "./mock-bsc-tokens/BEP20GovernanceToken.sol";
 
 
 // NFTYieldFarming is the master contract of GovernanceToken. This contract can make GovernanceToken.
@@ -30,8 +30,8 @@ contract NFTYieldFarming is Ownable {
         uint256 accGovernanceTokenPerShare; // Accumulated GovernanceTokens per share, times 1e12. See below.
     }
     
-    // The Governance Token
-    GovernanceToken public governanceToken;
+    // The Governance Token (BEP20 version)
+    BEP20GovernanceToken public governanceToken;
     
     // Dev address. (Admin address)
     address public devaddr;
@@ -60,7 +60,7 @@ contract NFTYieldFarming is Ownable {
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
     constructor(
-        GovernanceToken _governanceToken,
+        BEP20GovernanceToken _governanceToken,
         address _devaddr,  /// Admin address
         uint256 _governanceTokenPerBlock,
         uint256 _startBlock,
