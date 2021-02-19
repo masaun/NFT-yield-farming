@@ -43,21 +43,33 @@ contract("NFTYieldFarming on BSC", function(accounts) {
 
     describe("Setup smart-contracts", () => {
         it("Deploy the NFT token (ERC721) contract instance", async () => {
-            nftToken = await NFTToken.new({ from: deployer });
-            NFT_TOKEN = nftToken.address;
-            console.log('\n=== NFT_TOKEN ===', NFT_TOKEN);
+            // nftToken = await NFTToken.new({ from: deployer });
+            // NFT_TOKEN = nftToken.address;
+            // console.log('\n=== NFT_TOKEN ===', NFT_TOKEN);
+
+            /// Using deployed contract address on BSC testnet
+            NFT_TOKEN = "0x632f3a085Ea2C8e3a82127BC38e6281bA7C6c3e2";
+            nftToken = await NFTToken.at(NFT_TOKEN);
         });
 
         it("Deploy the LP token (BEP20) contract instance", async () => {
-            lpToken = await LPToken.new({ from: deployer });
-            LP_TOKEN = lpToken.address;
-            console.log('\n=== LP_TOKEN ===', LP_TOKEN);
+            // lpToken = await LPToken.new({ from: deployer });
+            // LP_TOKEN = lpToken.address;
+            // console.log('\n=== LP_TOKEN ===', LP_TOKEN);
+
+            /// Using deployed contract address on BSC testnet
+            LP_TOKEN = "0x7E64DE6168C7498Db9484a9C3809db122b358BE3";
+            lpToken = await LPToken.at(LP_TOKEN);
         });
 
         it("Deploy the Governance token (BEP20) contract instance", async () => {
-            governanceToken = await GovernanceToken.new({ from: deployer });
-            GOVERNANCE_TOKEN = governanceToken.address;
-            console.log('\n=== GOVERNANCE_TOKEN ===', GOVERNANCE_TOKEN);
+            // governanceToken = await GovernanceToken.new({ from: deployer });
+            // GOVERNANCE_TOKEN = governanceToken.address;
+            // console.log('\n=== GOVERNANCE_TOKEN ===', GOVERNANCE_TOKEN);
+
+            /// Using deployed contract address on BSC testnet
+            GOVERNANCE_TOKEN = "0x7397F062ed24d20C350d56a612eb856cb01DE925";
+            governanceToken = await GovernanceToken.at(GOVERNANCE_TOKEN);
         });
 
         it("Deploy the NFTYieldFarming contract instance", async () => {
@@ -70,6 +82,7 @@ contract("NFTYieldFarming on BSC", function(accounts) {
 
             nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
             NFT_YIELD_FARMING = nftYieldFarming.address;
+            console.log('\n=== NFT_YIELD_FARMING ===', NFT_YIELD_FARMING);
         });
 
         it("Transfer ownership of the Governance token (ERC20) contract to the NFTYieldFarming contract", async () => {
