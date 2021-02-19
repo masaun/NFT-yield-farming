@@ -159,7 +159,7 @@ async function processOfNFTYieldFarming() {
     /// User2 stake (deposit) 20 LP tokens at block 314.
     await time.advanceBlockTo("313");
 
-    const _nftPoolId = 0;
+    //const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('20', 'ether');  /// 20 LP Token
     let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user2 });
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user2 });
@@ -170,7 +170,7 @@ async function processOfNFTYieldFarming() {
     /// User3 stake (deposit) 30 LPs at block 318
     await time.advanceBlockTo("317");
 
-    const _nftPoolId = 0;
+    //const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('30', 'ether');  /// 30 LP Token
 
     let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user3 });
@@ -182,7 +182,7 @@ async function processOfNFTYieldFarming() {
     /// User1 stake (deposit) 10 more LP tokens at block 320.
     await time.advanceBlockTo("319");
 
-    const _nftPoolId = 0;
+    //const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
 
     let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
@@ -245,7 +245,7 @@ async function processOfNFTYieldFarming() {
     console.log("Un-stake and withdraw 10 LP tokens and receive 5952 GovernanceToken as rewards (at block 322)");
     /// [Note]: Total LPs amount staked of user1 is 20 LP tokens at block 321.
     /// [Note]: Therefore, maximum withdraw amount for user1 is 20 LPs
-    const _nftPoolId = 0;
+    //const _nftPoolId = 0;
     const _unStakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
     let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: user1 });
 
