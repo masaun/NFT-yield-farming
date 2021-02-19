@@ -2,18 +2,18 @@
 pragma solidity ^0.6.12;
 
 import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import { IBEP20 } from "./bsc/IBEP20.sol";
+//import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import { EnumerableSet } from "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { BEP20GovernanceToken } from "./mock-bsc-tokens/BEP20GovernanceToken.sol";
 
 
-// NFTYieldFarming is the master contract of GovernanceToken. This contract can make GovernanceToken.
-contract NFTYieldFarming is Ownable {
+// NFTYieldFarming (BEP20 version on BSC) is the master contract of GovernanceToken. This contract can make GovernanceToken.
+contract NFTYieldFarmingOnBSC is Ownable {
     using SafeMath for uint256;
-    using SafeERC20 for IERC20;
+    //using SafeERC20 for IERC20;
 
     // Info of each user.
     struct UserInfo {
@@ -24,7 +24,7 @@ contract NFTYieldFarming is Ownable {
     // Info of each NFT pool.
     struct NFTPoolInfo {
         IERC721 nftToken;    /// NFT token as a target to stake
-        IERC20 lpToken;      /// LP token to be staked
+        IBEP20 lpToken;      /// LP token (BEP20) to be staked
         uint256 allocPoint;  /// How many allocation points assigned to this pool. GovernanceTokens to distribute per block.
         uint256 lastRewardBlock; // Last block number that GovernanceTokens distribution occurs.
         uint256 accGovernanceTokenPerShare; // Accumulated GovernanceTokens per share, times 1e12. See below.
@@ -81,7 +81,7 @@ contract NFTYieldFarming is Ownable {
     // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
     function addNFTPool(
         IERC721 _nftToken,   /// NFT token as a target to stake
-        IERC20 _lpToken,     /// LP token to be staked
+        IBEP20 _lpToken,     /// LP token (BEP20) to be staked
         uint256 _allocPoint,
         bool _withUpdate
     ) public onlyOwner {
@@ -191,7 +191,7 @@ contract NFTYieldFarming is Ownable {
                 );
             safeGovernanceTokenTransfer(msg.sender, pending);
         }
-        pool.lpToken.safeTransferFrom(
+        pool.lpToken.transferFrom(  /// [Note]: Using BEP20
             address(msg.sender),
             address(this),
             _amount
@@ -214,7 +214,7 @@ contract NFTYieldFarming is Ownable {
         safeGovernanceTokenTransfer(msg.sender, pending);
         user.amount = user.amount.sub(_amount);
         user.rewardDebt = user.amount.mul(pool.accGovernanceTokenPerShare).div(1e12);
-        pool.lpToken.safeTransfer(address(msg.sender), _amount);
+        pool.lpToken.transfer(address(msg.sender), _amount);  /// [Note]: Using BEP20
         emit Withdraw(msg.sender, _pid, _amount);
     }
 

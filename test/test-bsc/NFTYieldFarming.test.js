@@ -6,16 +6,16 @@ const web3 = new Web3('https://data-seed-prebsc-2-s1.binance.org:8545'); /// [No
 const { time } = require('@openzeppelin/test-helpers');
 
 /// Artifact of smart contracts 
-const NFTYieldFarming = artifacts.require("NFTYieldFarming");
+const NFTYieldFarming = artifacts.require("NFTYieldFarmingOnBSC");  /// on BSC
 const NFTToken = artifacts.require("MockNFTToken");    /// As a NFT token (ERC721)
 const LPToken = artifacts.require("BEP20LPToken");     /// As a LP token (BEP20)
 //const LPToken = artifacts.require("MockLPToken");    /// As a LP token (ERC20)
-const GovernanceToken = artifacts.require("GovernanceToken");  /// As a reward token and a governance token
+const GovernanceToken = artifacts.require("BEP20GovernanceToken");  /// As a reward token and a governance token
 
 /***
  * @dev - Execution COMMAND: $ truffle test ./test/test-bsc/NFTYieldFarming.test.js --network bsc_testnet
  **/
-contract("NFTYieldFarming", function(accounts) {
+contract("NFTYieldFarming on BSC", function(accounts) {
     /// Acccounts
     let deployer = accounts[0];
     let admin = accounts[1];
@@ -45,16 +45,19 @@ contract("NFTYieldFarming", function(accounts) {
         it("Deploy the NFT token (ERC721) contract instance", async () => {
             nftToken = await NFTToken.new({ from: deployer });
             NFT_TOKEN = nftToken.address;
+            console.log('\n=== NFT_TOKEN ===', NFT_TOKEN);
         });
 
-        it("Deploy the LP token (ERC20) contract instance", async () => {
+        it("Deploy the LP token (BEP20) contract instance", async () => {
             lpToken = await LPToken.new({ from: deployer });
             LP_TOKEN = lpToken.address;
+            console.log('\n=== LP_TOKEN ===', LP_TOKEN);
         });
 
-        it("Deploy the Governance token (ERC20) contract instance", async () => {
+        it("Deploy the Governance token (BEP20) contract instance", async () => {
             governanceToken = await GovernanceToken.new({ from: deployer });
             GOVERNANCE_TOKEN = governanceToken.address;
+            console.log('\n=== GOVERNANCE_TOKEN ===', GOVERNANCE_TOKEN);
         });
 
         it("Deploy the NFTYieldFarming contract instance", async () => {
