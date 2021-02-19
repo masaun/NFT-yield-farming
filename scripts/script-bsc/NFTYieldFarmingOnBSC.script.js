@@ -163,7 +163,7 @@ async function addNewNFTPoolAsATarget() {
     const _nftToken = NFT_TOKEN;  /// NFT token as a target to stake
     const _lpToken = LP_TOKEN;    /// LP token to be staked
     const _allocPoint = "100";
-    const _withUpdate = true;    
+    const _withUpdate = true;
     let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer });
 }
 
@@ -175,8 +175,11 @@ async function user1Stake10LPTokensAtBlock310() {
 
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: deployer });   /// [Result]: Success
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });  /// [Result]: Success
+
+    //let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });    /// [Result]: Success
+    //let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });   /// [Result]: Success
 }
 
 async function user2Stake20LPTokensAtBlock314() {
