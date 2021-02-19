@@ -149,9 +149,9 @@ async function processOfNFTYieldFarming() {
     await time.advanceBlockTo("309");
 
     const _nftPoolId = 0;
-    const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
+    const _stakeAmount1 = web3.utils.toWei('10', 'ether');  /// 10 LP Token
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount1, { from: user1 });
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount1, { from: user1 });
 
 
     console.log("User2 stake 20 LP tokens at block 314");
@@ -160,9 +160,9 @@ async function processOfNFTYieldFarming() {
     await time.advanceBlockTo("313");
 
     //const _nftPoolId = 0;
-    const _stakeAmount = web3.utils.toWei('20', 'ether');  /// 20 LP Token
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user2 });
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user2 });
+    const _stakeAmount2 = web3.utils.toWei('20', 'ether');  /// 20 LP Token
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount2, { from: user2 });
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount2, { from: user2 });
 
 
     console.log("User3 stake 30 LP tokens at block 318");
@@ -171,10 +171,10 @@ async function processOfNFTYieldFarming() {
     await time.advanceBlockTo("317");
 
     //const _nftPoolId = 0;
-    const _stakeAmount = web3.utils.toWei('30', 'ether');  /// 30 LP Token
+    const _stakeAmount3 = web3.utils.toWei('30', 'ether');  /// 30 LP Token
 
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user3 });
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user3 });
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount3, { from: user3 });
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount3, { from: user3 });
 
 
     console.log("User1 stake more 10 LP tokens at block 320");
@@ -183,10 +183,10 @@ async function processOfNFTYieldFarming() {
     await time.advanceBlockTo("319");
 
     //const _nftPoolId = 0;
-    const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
+    const _stakeAmount4 = web3.utils.toWei('10', 'ether');  /// 10 LP Token
 
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount4, { from: user1 });
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount4, { from: user1 });
 
 
     console.log("Current block should be at block 321");
