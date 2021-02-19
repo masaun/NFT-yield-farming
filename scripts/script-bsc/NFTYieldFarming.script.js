@@ -17,11 +17,11 @@ const GovernanceToken = artifacts.require("BEP20GovernanceToken");  /// As a rew
  **/
 
 /// Acccounts
-let deployer = accounts[0];
-let admin = accounts[1];
-let user1 = accounts[2];
-let user2 = accounts[3];
-let user3 = accounts[4];
+let deployer;
+let admin;
+let user1;
+let user2;
+let user3;
 
 /// Global contract instance
 let nftYieldFarming;
@@ -40,16 +40,19 @@ let GOVERNANCE_TOKEN;
  * @notice - Execute all methods
  **/
 async function main() {
-    await getAccounts();
+    await getAllAccounts();
 }
 main();
 
 
-console.log("---- Check state in advance ---");
+console.log("\n---- Check state in advance ---");
 
 
-async function getAccounts() {
-    console.log('\n=== accounts ===\n', accounts, '\n========================\n');
+async function getAllAccounts() {
+    const deployer = process.env.DEPLOYER_WALLET;
+    const admin = process.env.ADMIN_WALLET;
+    console.log('\n=== deployer ===', deployer);
+    console.log('\n=== admin ===', admin);
 }
 
 
