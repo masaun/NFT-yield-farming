@@ -159,7 +159,7 @@ contract("NFTYieldFarming on BSC", function(accounts) {
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user3 });
         });
 
-        it("User1 stake more 10 LP tokens at block 320", async () => {
+        it("User1 stake 10 more LP tokens at block 320", async () => {
             /// [Note]: Block to mint the GovernanceToken start from block 300.
             /// User1 stake (deposit) 10 more LP tokens at block 320.
             await time.advanceBlockTo("319");

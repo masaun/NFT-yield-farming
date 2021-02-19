@@ -8,7 +8,7 @@
   "scripts": {
     "test": "truffle test ./test/test-local/*",
     "test:nft-yield-farming": "truffle test ./test/test-local/NFTYieldFarming.test.js",
-    "test:nft-yield-farming_bsc-testnet": "truffle test ./test/test-bsc/NFTYieldFarming.test.js --network bsc_testnet",
+    "test:nft-yield-farming_bsc-testnet": "truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet",
     "script:nft-yield-farming_bsc-testnet": "truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet",
     "compile:local": "truffle compile --reset --network local",
     "compile:bsc_testnet": "truffle compile --reset --network bsc_testnet",

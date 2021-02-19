@@ -135,60 +135,83 @@ async function preparationForTestsInAdvance() {
 }
 
 async function processOfNFTYieldFarming() {
+    await addNewNFTPoolAsATarget();
+    await user1Stake10LPTokensAtBlock310();
+    await user2Stake20LPTokensAtBlock314();
+    await user3Stake30LPTokensAtBlock318();
+    await currentBlock();
+    await totalSupplyOfGovernanceToken();
+    await governanceTokenBalanceOfUser1();
+    await governanceTokenBalanceOfanotherUsers();
+    await governanceTokenBalanceOfNFTYieldFarmingOnBSCContract();
+    await unstakeAndWithdraw();
+}
+
+
+///------------------------------
+/// Process of NFT Yield Farming
+///------------------------------
+
+async function addNewNFTPoolAsATarget() {
     console.log("Add a new NFT Pool as a target");
     const _nftToken = NFT_TOKEN;  /// NFT token as a target to stake
     const _lpToken = LP_TOKEN;    /// LP token to be staked
     const _allocPoint = "100";
     const _withUpdate = true;    
     let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer });
+}
 
-
+async function user1Stake10LPTokensAtBlock310() {
     console.log("User1 stake 10 LP tokens at block 310");
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     /// User1 stake (deposit) 10 LP tokens at block 310.
     await time.advanceBlockTo("309");
 
     const _nftPoolId = 0;
-    const _stakeAmount1 = web3.utils.toWei('10', 'ether');  /// 10 LP Token
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount1, { from: user1 });
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount1, { from: user1 });
+    const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
+}
 
-
+async function user2Stake20LPTokensAtBlock314() {
     console.log("User2 stake 20 LP tokens at block 314");
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     /// User2 stake (deposit) 20 LP tokens at block 314.
     await time.advanceBlockTo("313");
 
-    //const _nftPoolId = 0;
-    const _stakeAmount2 = web3.utils.toWei('20', 'ether');  /// 20 LP Token
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount2, { from: user2 });
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount2, { from: user2 });
+    const _nftPoolId = 0;
+    const _stakeAmount = web3.utils.toWei('20', 'ether');  /// 20 LP Token
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user2 });
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user2 });
+}
 
-
+async function user3Stake30LPTokensAtBlock318() {
     console.log("User3 stake 30 LP tokens at block 318");
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     /// User3 stake (deposit) 30 LPs at block 318
     await time.advanceBlockTo("317");
 
-    //const _nftPoolId = 0;
-    const _stakeAmount3 = web3.utils.toWei('30', 'ether');  /// 30 LP Token
+    const _nftPoolId = 0;
+    const _stakeAmount = web3.utils.toWei('30', 'ether');  /// 30 LP Token
 
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount3, { from: user3 });
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount3, { from: user3 });
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user3 });
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user3 });
+}
 
-
-    console.log("User1 stake more 10 LP tokens at block 320");
+async function user1Stake10MoreLPTokensAtBlock320() {
+    console.log("User1 stake 10 more LP tokens at block 320");
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     /// User1 stake (deposit) 10 more LP tokens at block 320.
     await time.advanceBlockTo("319");
 
-    //const _nftPoolId = 0;
+    const _nftPoolId = 0;
     const _stakeAmount4 = web3.utils.toWei('10', 'ether');  /// 10 LP Token
 
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount4, { from: user1 });
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount4, { from: user1 });
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
+}
 
-
+async function currentBlock() {
     console.log("Current block should be at block 321");
     let currentBlock = await time.latestBlock();
     console.log('=== currentBlock ===', String(currentBlock));
@@ -197,8 +220,9 @@ async function processOfNFTYieldFarming() {
         "321",
         "Current block should be 321"
     );
+}
 
-
+async function totalSupplyOfGovernanceToken() {
     console.log("Total Supply of the GovernanceToken should be 11000 (at block 321)");
     ///  At this point (At block 321): 
     ///      TotalSupply of GovernanceToken: 1000 * (321 - 310) = 11000
@@ -211,8 +235,9 @@ async function processOfNFTYieldFarming() {
         11000,  /// [Note]: This is amount value rounded.
         "Total supply of the Governance tokens (at block 321) should be 11000"
     );
+}
 
-
+async function governanceTokenBalanceOfUser1() {
     console.log("GovernanceToken balance of user1 should be 5667 (at block 321)");
     let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 });
     console.log('=== GovernanceToken balance of user1 ===', String(governanceTokenBalanceOfUser1));
@@ -221,8 +246,9 @@ async function processOfNFTYieldFarming() {
         5667,  /// [Note]: This is amount value rounded.
         "GovernanceToken balance of user1 should be 5667 (at block 321)"
     );
+}
 
-
+async function governanceTokenBalanceOfanotherUsers() {
     console.log("GovernanceToken balance of user2, user3, admin (at block 321)");
     let governanceTokenBalanceOfUser2 = await governanceToken.balanceOf(user2, { from: user2 });
     let governanceTokenBalanceOfUser3 = await governanceToken.balanceOf(user3, { from: user3 });
@@ -230,9 +256,10 @@ async function processOfNFTYieldFarming() {
     console.log('=== GovernanceToken balance of user2 ===', String(governanceTokenBalanceOfUser2));
     console.log('=== GovernanceToken balance of user3 ===', String(governanceTokenBalanceOfUser3));
     console.log('=== GovernanceToken balance of admin ===', String(governanceTokenBalanceOfAdmin));
+}
 
-
-    console.log("GovernanceToken balance of the NFTYieldFarming contract should be 4333 (at block 321)");
+async function governanceTokenBalanceOfNFTYieldFarmingOnBSCContract() {
+    console.log("GovernanceToken balance of the NFTYieldFarmingOnBSC contract should be 4333 (at block 321)");
     let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: user1 });
     console.log('=== GovernanceToken balance of the NFTYieldFarming contract ===', String(governanceTokenBalance));
     assert.equal(
@@ -240,12 +267,13 @@ async function processOfNFTYieldFarming() {
         4333,  /// [Note]: This is amount value rounded.
         "GovernanceToken balance of the NFTYieldFarming contract should be 4333 (at block 321)"
     );
+}
 
-
+async function unstakeAndWithdraw() {
     console.log("Un-stake and withdraw 10 LP tokens and receive 5952 GovernanceToken as rewards (at block 322)");
     /// [Note]: Total LPs amount staked of user1 is 20 LP tokens at block 321.
     /// [Note]: Therefore, maximum withdraw amount for user1 is 20 LPs
-    //const _nftPoolId = 0;
+    const _nftPoolId = 0;
     const _unStakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
     let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: user1 });
 
