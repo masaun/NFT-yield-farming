@@ -44,43 +44,52 @@ let GOVERNANCE_TOKEN;
 
 /// [Note]: For truffle exec (Remarks: Need to use module.exports)
 module.exports = function(callback) {
-    main().then(() => callback()).catch(err => callback(err))
+    main().then(() => callback()).catch(err => callback(err));
 };
 
 async function main() {
     console.log("\n------------- Check state in advance -------------");
-    await getAllAccounts();
+    await checkStateInAdvance();
 
     console.log("\n------------- Setup smart-contracts -------------");
-    await createContractInstance();
+    await setUpSmartContracts();
+    await transferOwnershipToNFTYieldFarmingContract();
 }
 
 
 ///-----------------------------------------------
 /// Methods
 ///-----------------------------------------------
-async function getAllAccounts(callback) {
+async function checkStateInAdvance() {
     /// Assign addresses into global variables of wallets
     deployer = process.env.DEPLOYER_WALLET;
     admin = process.env.ADMIN_WALLET;
-    console.log('\n=== deployer ===', deployer);
-    console.log('\n=== admin ===', admin);
+    console.log('=== deployer ===', deployer);
+    console.log('=== admin ===', admin);
 }
 
-
-async function createContractInstance(callback) {
-    /// Using deployed contract address on BSC testnet
+async function setUpSmartContracts() {
+    /// Assign the deployed-contract addresses on BSC testnet into each contracts
     console.log("Deploy the NFT token (ERC721) contract instance");
-    NFT_TOKEN = "0x632f3a085Ea2C8e3a82127BC38e6281bA7C6c3e2";
-    nftToken = await NFTToken.at(NFT_TOKEN);
+    // NFT_TOKEN = "0x1fa22E714E7F1012E6F438a89D89940B8f836B03";
+    // nftToken = await NFTToken.at(NFT_TOKEN);
+    nftToken = await NFTToken.new({ from: deployer });
+    NFT_TOKEN = nftToken.address;
+    console.log('=== NFT_TOKEN ===', NFT_TOKEN);
 
     console.log("Deploy the LP token (BEP20) contract instance");
-    LP_TOKEN = "0x7E64DE6168C7498Db9484a9C3809db122b358BE3";
-    lpToken = await LPToken.at(LP_TOKEN);
+    // LP_TOKEN = "0xa7ed98650d4C5EC7DDDA9394a68bDC257E4f1e75";
+    // lpToken = await LPToken.at(LP_TOKEN);
+    lpToken = await LPToken.new({ from: deployer });
+    LP_TOKEN = lpToken.address;
+    console.log('=== LP_TOKEN ===', LP_TOKEN);
 
     console.log("Deploy the Governance token (BEP20) contract instance");
-    GOVERNANCE_TOKEN = "0x7397F062ed24d20C350d56a612eb856cb01DE925";
-    governanceToken = await GovernanceToken.at(GOVERNANCE_TOKEN);
+    // GOVERNANCE_TOKEN = "0xf9Cd775feaE9E57E2675C04cB6F6aF3148097cC8";
+    // governanceToken = await GovernanceToken.at(GOVERNANCE_TOKEN);
+    governanceToken = await GovernanceToken.new({ from: deployer });
+    GOVERNANCE_TOKEN = governanceToken.address;
+    console.log('=== GOVERNANCE_TOKEN ===', GOVERNANCE_TOKEN);
 
     console.log("Deploy the NFTYieldFarming contract instance");
     /// [Note]: 100 per block farming rate starting at block 300 with bonus until block 1000
@@ -92,50 +101,17 @@ async function createContractInstance(callback) {
 
     nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
     NFT_YIELD_FARMING = nftYieldFarming.address;
-    console.log('\n=== NFT_YIELD_FARMING ===', NFT_YIELD_FARMING);    
+    console.log('=== NFT_YIELD_FARMING ===', NFT_YIELD_FARMING);  /// e.g. 0x28E0F63035Fb8beC5aA4D71163D3244585c9A054  
+}
+
+async function transferOwnershipToNFTYieldFarmingContract() {
+    console.log("Transfer ownership of the Governance token (ERC20) contract to the NFTYieldFarming contract");
+    const newOwner = NFT_YIELD_FARMING;
+    const txReceipt = await governanceToken.transferOwnership(newOwner, { from: deployer });
 }
 
 
-    // describe("--- Setup smart-contracts ---", () => {
-    //     it("Deploy the NFT token (ERC721) contract instance", async () => {
-    //         nftToken = await NFTToken.new({ from: deployer });
-    //         NFT_TOKEN = nftToken.address;
-    //         console.log('\n=== NFT_TOKEN ===', NFT_TOKEN);
-    //     });
 
-    //     it("Deploy the LP token (BEP20) contract instance", async () => {
-    //         lpToken = await LPToken.new({ from: deployer });
-    //         LP_TOKEN = lpToken.address;
-    //         console.log('\n=== LP_TOKEN ===', LP_TOKEN);
-    //     });
-
-    //     it("Deploy the Governance token (BEP20) contract instance", async () => {
-    //         governanceToken = await GovernanceToken.new({ from: deployer });
-    //         GOVERNANCE_TOKEN = governanceToken.address;
-    //         console.log('\n=== GOVERNANCE_TOKEN ===', GOVERNANCE_TOKEN);
-    //     });
-
-    //     it("Deploy the NFTYieldFarming contract instance", async () => {
-    //         /// [Note]: 100 per block farming rate starting at block 300 with bonus until block 1000
-    //         const _devaddr = admin;  /// Admin address
-    //         const _governanceTokenPerBlock = web3.utils.toWei("100", "ether");  /// [Note]: This unit is amount. Not blockNumber
-    //         //const _governanceTokenPerBlock = "100";
-    //         const _startBlock = "300";
-    //         const _bonusEndBlock = "1000";
-
-    //         nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
-    //         NFT_YIELD_FARMING = nftYieldFarming.address;
-    //     });
-
-    //     it("Transfer ownership of the Governance token (ERC20) contract to the NFTYieldFarming contract", async () => {
-    //         /// [Test]: Mint
-    //         // const _mintAmount = web3.utils.toWei('100', 'ether');
-    //         // await governanceToken.mint(user1, _mintAmount, { from: deployer});
-
-    //         const newOwner = NFT_YIELD_FARMING;
-    //         const txReceipt = await governanceToken.transferOwnership(newOwner, { from: deployer });
-    //     });        
-    // });
 
     // describe("Preparation for tests in advance", () => {
     //     it("Mint the NFT token (ERC721) to user1", async () => {
