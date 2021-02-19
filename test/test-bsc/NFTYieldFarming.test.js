@@ -13,7 +13,9 @@ const LPToken = artifacts.require("BEP20LPToken");     /// As a LP token (BEP20)
 const GovernanceToken = artifacts.require("BEP20GovernanceToken");  /// As a reward token and a governance token
 
 /***
- * @dev - Execution COMMAND: $ truffle test ./test/test-bsc/NFTYieldFarming.test.js --network bsc_testnet
+ * @dev - Execution COMMAND: 
+ *        - $ npm run script:nft-yield-farming_bsc-testnet
+ *        - $ truffle test ./test/test-bsc/NFTYieldFarming.test.js --network bsc_testnet
  **/
 contract("NFTYieldFarming on BSC", function(accounts) {
     /// Acccounts
