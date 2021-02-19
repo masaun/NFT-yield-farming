@@ -54,6 +54,9 @@ async function main() {
     console.log("\n------------- Setup smart-contracts -------------");
     await setUpSmartContracts();
     await transferOwnershipToNFTYieldFarmingContract();
+
+    console.log("\n------------- Preparation for tests in advance -------------");
+    await preparationForTestsInAdvance();
 }
 
 
@@ -64,8 +67,14 @@ async function checkStateInAdvance() {
     /// Assign addresses into global variables of wallets
     deployer = process.env.DEPLOYER_WALLET;
     admin = process.env.ADMIN_WALLET;
+    user1 = process.env.USER_1_WALLET;
+    user2 = process.env.USER_2_WALLET;
+    user3 = process.env.USER_3_WALLET;
     console.log('=== deployer ===', deployer);
     console.log('=== admin ===', admin);
+    console.log('=== user1 ===', user1);
+    console.log('=== user2 ===', user2);
+    console.log('=== user3 ===', user3);
 }
 
 async function setUpSmartContracts() {
@@ -110,22 +119,20 @@ async function transferOwnershipToNFTYieldFarmingContract() {
     const txReceipt = await governanceToken.transferOwnership(newOwner, { from: deployer });
 }
 
+async function preparationForTestsInAdvance() {
+    console.log("Mint the NFT token (ERC721) to user1");
+    const tokenURI = "https://testnft.example/token-id-8u5h2m.json";
+    let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
+
+    console.log("Transfer the LP token (BEP20) from deployer to 3 users");
+    const amount = web3.utils.toWei('1000', 'ether');
+    let txReceipt1 = await lpToken.transfer(user1, amount, { from: deployer });
+    let txReceipt2 = await lpToken.transfer(user2, amount, { from: deployer });
+    let txReceipt3 = await lpToken.transfer(user3, amount, { from: deployer });
+}
 
 
 
-    // describe("Preparation for tests in advance", () => {
-    //     it("Mint the NFT token (ERC721) to user1", async () => {
-    //         const tokenURI = "https://testnft.example/token-id-8u5h2m.json";
-    //         let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
-    //     });
-
-    //     it("Transfer the LP token (ERC20) from deployer to 3 users", async () => {
-    //         const amount = web3.utils.toWei('1000', 'ether');
-    //         let txReceipt1 = await lpToken.transfer(user1, amount, { from: deployer });
-    //         let txReceipt2 = await lpToken.transfer(user2, amount, { from: deployer });
-    //         let txReceipt3 = await lpToken.transfer(user3, amount, { from: deployer });
-    //     });
-    // });
 
     // describe("Process of the NFT yield farming (in case all staked-LP tokens are not withdrawn)", () => {
     //     it("Add a new NFT Pool as a target", async () => {
