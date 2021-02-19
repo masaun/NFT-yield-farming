@@ -154,10 +154,8 @@ async function processOfNFTYieldFarming() {
 ///------------------------------
 
 async function currentBlock1() {
-    const blockSynced = await web3.eth.isSyncing();
-    console.log('=== blockSynced ===', String(blockSynced));
-    const currentBlockNumber = await blockSynced.currentBlock;
-    console.log('=== currentBlock 1 ===', String(currentBlockNumber));
+    const currentBlock = await web3.eth.getBlockNumber();
+    console.log('=== currentBlock 1 ===', String(currentBlock));
 }
 
 async function addNewNFTPoolAsATarget() {
@@ -221,9 +219,8 @@ async function user1Stake10MoreLPTokensAtBlock320() {
 
 async function currentBlock2() {
     console.log("Current block should be at block 321");
-    const blockSynced = await web3.eth.isSyncing();
-    const currentBlockNumber = await blockSynced.currentBlock;
-    console.log('=== currentBlock 2 ===', String(currentBlockNumber));
+    const currentBlock = await web3.eth.getBlockNumber();
+    console.log('=== currentBlock 2 ===', String(currentBlock));
 
     // let currentBlock = await time.latestBlock();
     // console.log('=== currentBlock ===', String(currentBlock));
