@@ -60,8 +60,9 @@ async function main() {
 /// Methods
 ///-----------------------------------------------
 async function getAllAccounts(callback) {
-    const deployer = process.env.DEPLOYER_WALLET;
-    const admin = process.env.ADMIN_WALLET;
+    /// Assign addresses into global variables of wallets
+    deployer = process.env.DEPLOYER_WALLET;
+    admin = process.env.ADMIN_WALLET;
     console.log('\n=== deployer ===', deployer);
     console.log('\n=== admin ===', admin);
 }
