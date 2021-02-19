@@ -140,7 +140,7 @@ async function processOfNFTYieldFarming() {
     await user2Stake20LPTokensAtBlock314();
     await user3Stake30LPTokensAtBlock318();
 
-    await currentBlock();
+    await currentBlock2();
     await totalSupplyOfGovernanceToken();
     await governanceTokenBalanceOfUser1();
     await governanceTokenBalanceOfanotherUsers();
@@ -152,6 +152,13 @@ async function processOfNFTYieldFarming() {
 ///------------------------------
 /// Process of NFT Yield Farming
 ///------------------------------
+
+async function currentBlock1() {
+    const blockSynced = await web3.eth.isSyncing();
+    console.log('=== blockSynced ===', String(blockSynced));
+    const currentBlockNumber = await blockSynced.currentBlock;
+    console.log('=== currentBlock 1 ===', String(currentBlockNumber));
+}
 
 async function addNewNFTPoolAsATarget() {
     console.log("Add a new NFT Pool as a target");
@@ -212,8 +219,12 @@ async function user1Stake10MoreLPTokensAtBlock320() {
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
 }
 
-async function currentBlock() {
+async function currentBlock2() {
     console.log("Current block should be at block 321");
+    const blockSynced = await web3.eth.isSyncing();
+    const currentBlockNumber = await blockSynced.currentBlock;
+    console.log('=== currentBlock 2 ===', String(currentBlockNumber));
+
     // let currentBlock = await time.latestBlock();
     // console.log('=== currentBlock ===', String(currentBlock));
     // assert.equal(
