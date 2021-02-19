@@ -1,6 +1,8 @@
 /// Using BSC testnet
 const Web3 = require('web3');
-const web3 = new Web3('https://data-seed-prebsc-2-s1.binance.org:8545'); /// [Note]: Endpoing is the BSC testnet
+//const web3 = new Web3('https://data-seed-prebsc-2-s1.binance.org:8545'); /// [Note]: Endpoing is the BSC testnet
+const provider = new Web3.providers.HttpProvider('https://data-seed-prebsc-2-s1.binance.org:8545');
+const web3 = new Web3(provider);
 
 /// Openzeppelin test-helper
 const { time } = require('@openzeppelin/test-helpers');
@@ -36,23 +38,60 @@ let LP_TOKEN;
 let GOVERNANCE_TOKEN;
 
 
-/***
- * @notice - Execute all methods
- **/
+///-----------------------------------------------
+/// Execute all methods
+///-----------------------------------------------
+
+/// [Note]: For truffle exec (Remarks: Need to use module.exports)
+module.exports = function(callback) {
+    main().then(() => callback()).catch(err => callback(err))
+};
+
 async function main() {
+    console.log("\n------------- Check state in advance -------------");
     await getAllAccounts();
+
+    console.log("\n------------- Setup smart-contracts -------------");
+    await createContractInstance();
 }
-main();
 
 
-console.log("\n---- Check state in advance ---");
-
-
-async function getAllAccounts() {
+///-----------------------------------------------
+/// Methods
+///-----------------------------------------------
+async function getAllAccounts(callback) {
     const deployer = process.env.DEPLOYER_WALLET;
     const admin = process.env.ADMIN_WALLET;
     console.log('\n=== deployer ===', deployer);
     console.log('\n=== admin ===', admin);
+}
+
+
+async function createContractInstance(callback) {
+    /// Using deployed contract address on BSC testnet
+    console.log("Deploy the NFT token (ERC721) contract instance");
+    NFT_TOKEN = "0x632f3a085Ea2C8e3a82127BC38e6281bA7C6c3e2";
+    nftToken = await NFTToken.at(NFT_TOKEN);
+
+    console.log("Deploy the LP token (BEP20) contract instance");
+    LP_TOKEN = "0x7E64DE6168C7498Db9484a9C3809db122b358BE3";
+    lpToken = await LPToken.at(LP_TOKEN);
+
+    console.log("Deploy the Governance token (BEP20) contract instance");
+    GOVERNANCE_TOKEN = "0x7397F062ed24d20C350d56a612eb856cb01DE925";
+    governanceToken = await GovernanceToken.at(GOVERNANCE_TOKEN);
+
+    console.log("Deploy the NFTYieldFarming contract instance");
+    /// [Note]: 100 per block farming rate starting at block 300 with bonus until block 1000
+    const _devaddr = admin;  /// Admin address
+    const _governanceTokenPerBlock = web3.utils.toWei("100", "ether");  /// [Note]: This unit is amount. Not blockNumber
+    //const _governanceTokenPerBlock = "100";
+    const _startBlock = "300";
+    const _bonusEndBlock = "1000";
+
+    nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
+    NFT_YIELD_FARMING = nftYieldFarming.address;
+    console.log('\n=== NFT_YIELD_FARMING ===', NFT_YIELD_FARMING);    
 }
 
 
