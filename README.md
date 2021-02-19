@@ -69,7 +69,7 @@ $ ganache-cli -d
 
 - 3: Execute test of the smart-contracts (on the BSC testnet)
     - `$ npm run test:nft-yield-farming_bsc-testnet`
-       ($ truffle test ./test/test-bsc/NFTYieldFarming.test.js --network bsc_testnet)
+       ($ truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet)
 
 <br>
 
@@ -77,7 +77,7 @@ $ ganache-cli -d
 - Execute script of the smart-contracts on the BSC testnet (with `truffle exec` command)
 ```
 $ npm run script:nft-yield-farming_bsc-testnet
-($ truffle exec ./scripts/script-bsc/NFTYieldFarming.script.js --network bsc_testnet)
+($ truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet)
 ```
 
 <br>

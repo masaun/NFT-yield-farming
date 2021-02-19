@@ -87,7 +87,7 @@ contract("NFTYieldFarming on BSC", function(accounts) {
             console.log('\n=== NFT_YIELD_FARMING ===', NFT_YIELD_FARMING);
         });
 
-        it("Transfer ownership of the Governance token (ERC20) contract to the NFTYieldFarming contract", async () => {
+        it("Transfer ownership of the Governance token (BEP20) contract to the NFTYieldFarming contract", async () => {
             /// [Test]: Mint
             // const _mintAmount = web3.utils.toWei('100', 'ether');
             // await governanceToken.mint(user1, _mintAmount, { from: deployer});
@@ -103,7 +103,7 @@ contract("NFTYieldFarming on BSC", function(accounts) {
             let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
         });
 
-        it("Transfer the LP token (ERC20) from deployer to 3 users", async () => {
+        it("Transfer the LP token (BEP20) from deployer to 3 users", async () => {
             const amount = web3.utils.toWei('1000', 'ether');
             let txReceipt1 = await lpToken.transfer(user1, amount, { from: deployer });
             let txReceipt2 = await lpToken.transfer(user2, amount, { from: deployer });
@@ -159,7 +159,7 @@ contract("NFTYieldFarming on BSC", function(accounts) {
             let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user3 });
         });
 
-        it("User1 stake more 10 LP tokens at block 320", async () => {
+        it("User1 stake 10 more LP tokens at block 320", async () => {
             /// [Note]: Block to mint the GovernanceToken start from block 300.
             /// User1 stake (deposit) 10 more LP tokens at block 320.
             await time.advanceBlockTo("319");
