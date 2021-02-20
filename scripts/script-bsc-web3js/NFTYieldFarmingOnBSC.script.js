@@ -37,6 +37,12 @@ let NFT_TOKEN;
 let LP_TOKEN;
 let GOVERNANCE_TOKEN;
 
+/// ABI
+let NFT_YIELD_FARMING_ABI;
+let NFT_TOKEN_ABI;
+let LP_TOKEN_ABI;
+let GOVERNANCE_TOKEN_ABI;
+
 
 ///-----------------------------------------------
 /// Execute all methods
@@ -100,23 +106,26 @@ async function setUpSmartContracts() {
     console.log("Deploy the NFT token (ERC721) contract instance");
     // NFT_TOKEN = "0x1fa22E714E7F1012E6F438a89D89940B8f836B03";
     // nftToken = await NFTToken.at(NFT_TOKEN);
-    nftToken = await NFTToken.new({ from: deployer });
+    const _nftToken = await NFTToken.new({ from: deployer });
     NFT_TOKEN = nftToken.address;
-    console.log('=== NFT_TOKEN ===', NFT_TOKEN);
+    NFT_TOKEN_ABI = nftToken.abi;
+    nftToken = new web3.eth.Contract(NFT_TOKEN_ABI, NFT_TOKEN);
 
     console.log("Deploy the LP token (BEP20) contract instance");
     // LP_TOKEN = "0xa7ed98650d4C5EC7DDDA9394a68bDC257E4f1e75";
     // lpToken = await LPToken.at(LP_TOKEN);
-    lpToken = await LPToken.new({ from: deployer });
+    const _lpToken = await LPToken.new({ from: deployer });
     LP_TOKEN = lpToken.address;
-    console.log('=== LP_TOKEN ===', LP_TOKEN);
+    LP_TOKEN_ABI = lpToken.abi;
+    lpToken = new web3.eth.Contract(LP_TOKEN_ABI, LP_TOKEN);
 
     console.log("Deploy the Governance token (BEP20) contract instance");
     // GOVERNANCE_TOKEN = "0xf9Cd775feaE9E57E2675C04cB6F6aF3148097cC8";
     // governanceToken = await GovernanceToken.at(GOVERNANCE_TOKEN);
-    governanceToken = await GovernanceToken.new({ from: deployer });
+    const _governanceToken = await GovernanceToken.new({ from: deployer });
     GOVERNANCE_TOKEN = governanceToken.address;
-    console.log('=== GOVERNANCE_TOKEN ===', GOVERNANCE_TOKEN);
+    GOVERNANCE_TOKEN_ABI = governanceToken.abi;
+    governanceToken = new web3.eth.Contract(GOVERNANCE_TOKEN_ABI, GOVERNANCE_TOKEN);
 
     console.log("Deploy the NFTYieldFarming contract instance");
     /// [Note]: 100 per block farming rate starting at block 300 with bonus until block 1000
@@ -125,9 +134,10 @@ async function setUpSmartContracts() {
     const _startBlock = "300";
     const _bonusEndBlock = "1000";
 
-    nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
+    const _nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
     NFT_YIELD_FARMING = nftYieldFarming.address;
-    console.log('=== NFT_YIELD_FARMING ===', NFT_YIELD_FARMING);  /// e.g. 0x28E0F63035Fb8beC5aA4D71163D3244585c9A054  
+    NFT_YIELD_FARMING_ABI = nftYieldFarming.abi;
+    nftYieldFarming = new web3.eth.Contract(NFT_YIELD_FARMING_ABI, (NFT_YIELD_FARMING);
 }
 
 async function transferOwnershipToNFTYieldFarmingContract() {
