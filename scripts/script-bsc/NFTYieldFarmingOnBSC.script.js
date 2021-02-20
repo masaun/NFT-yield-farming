@@ -8,7 +8,6 @@ const web3 = new Web3(provider);
 const NFTYieldFarming = artifacts.require("NFTYieldFarmingOnBSC");  /// on BSC
 const NFTToken = artifacts.require("MockNFTToken");    /// As a NFT token (ERC721)
 const LPToken = artifacts.require("BEP20LPToken");     /// As a LP token (BEP20)
-//const LPToken = artifacts.require("MockLPToken");    /// As a LP token (ERC20)
 const GovernanceToken = artifacts.require("BEP20GovernanceToken");  /// As a reward token and a governance token
 
 /***
@@ -214,18 +213,14 @@ async function totalSupplyOfGovernanceToken() {
 }
 
 async function governanceTokenBalanceOfUser1() {
-    console.log("GovernanceToken balance of user1 should be 5667 (at block 321)");
-    let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 });
-    console.log('=== GovernanceToken balance of user1 ===', String(governanceTokenBalanceOfUser1));
+    console.log("GovernanceToken balance of deployer should be 5667 (at block 321)");
+    let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
+    console.log('=== GovernanceToken balance of deployer ===', String(governanceTokenBalanceOfDeployer));
 }
 
 async function governanceTokenBalanceOfanotherUsers() {
-    console.log("GovernanceToken balance of user2, user3, admin (at block 321)");
-    let governanceTokenBalanceOfUser2 = await governanceToken.balanceOf(user2, { from: user2 });
-    let governanceTokenBalanceOfUser3 = await governanceToken.balanceOf(user3, { from: user3 });
+    console.log("GovernanceToken balance of admin (at block 321)");
     let governanceTokenBalanceOfAdmin = await governanceToken.balanceOf(admin, { from: admin });
-    console.log('=== GovernanceToken balance of user2 ===', String(governanceTokenBalanceOfUser2));
-    console.log('=== GovernanceToken balance of user3 ===', String(governanceTokenBalanceOfUser3));
     console.log('=== GovernanceToken balance of admin ===', String(governanceTokenBalanceOfAdmin));
 }
 
@@ -243,6 +238,6 @@ async function unstakeAndWithdraw() {
     const _unStakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
     let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: deployer });
 
-    let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 });
-    console.log('=== GovernanceToken balance of user1 ===', String(governanceTokenBalanceOfUser1));
+    let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
+    console.log('=== GovernanceToken balance of deployer ===', String(governanceTokenBalanceOfDeployer));
 }
