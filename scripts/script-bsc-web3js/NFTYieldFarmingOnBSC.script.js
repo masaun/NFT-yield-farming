@@ -303,3 +303,46 @@ async function unstakeAndWithdraw() {
     let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 });
     console.log('=== GovernanceToken balance of user1 ===', String(governanceTokenBalanceOfUser1));
 }
+
+
+///-------------------------------------
+/// Sign and Broadcast the transaction
+///-------------------------------------
+async function sendTransaction(walletAddress, privateKey, contractAddress, inputData) {
+    try {
+        const txCount = await web3.eth.getTransactionCount(walletAddress);
+        const nonce = await web3.utils.toHex(txCount);
+        console.log('=== txCount, nonce ===', txCount, nonce);
+
+        /// Build the transaction
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            from:     walletAddress,
+            to:       contractAddress,  /// Contract address which will be executed
+            value:    web3.utils.toHex(web3.utils.toWei('0', 'ether')),
+            gasLimit: web3.utils.toHex(2100000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('6', 'gwei')),
+            data: inputData  
+        }
+        console.log('=== txObject ===', txObject)
+
+        /// Sign the transaction
+        privateKey = Buffer.from(privateKey, 'hex');
+        let tx = new Tx(txObject, { 'chain': 'kovan'});  /// Chain ID = kovan
+        tx.sign(privateKey);
+
+        const serializedTx = tx.serialize();
+        const raw = '0x' + serializedTx.toString('hex');
+
+        /// Broadcast the transaction
+        const transaction = await web3.eth.sendSignedTransaction(raw);
+        console.log('=== transaction ===', transaction)
+
+        /// Return the result above
+        return transaction;
+    } catch(e) {
+        console.log('=== e ===', e);
+        return String(e);
+    }
+}
+
