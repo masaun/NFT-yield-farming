@@ -27,6 +27,13 @@ let user1;
 let user2;
 let user3;
 
+/// Private Key of each accounts
+let privateKeyOfDeployer;
+let privateKeyOfAdmin;
+let privateKeyOfUser1;
+let privateKeyOfUser2;
+let privateKeyOfUser3;
+
 /// Global contract instance
 let nftYieldFarming;
 let nftToken;
@@ -101,6 +108,13 @@ async function checkStateInAdvance() {
     console.log('=== user1 ===', user1);
     console.log('=== user2 ===', user2);
     console.log('=== user3 ===', user3);
+
+    /// Assign private keys
+    privateKeyOfDeployer = process.env.PRIVATE_KEY_OF_DEPLOYER_WALLET;
+    privateKeyOfAdmin = process.env.PRIVATE_KEY_OF_ADMIN_WALLET;
+    privateKeyOfUser1 = process.env.PRIVATE_KEY_OF_USER_1_WALLET;
+    privateKeyOfUser2 = process.env.PRIVATE_KEY_OF_USER_2_WALLET;
+    privateKeyOfUser3 = process.env.PRIVATE_KEY_OF_USER_3_WALLET;
 }
 
 async function setUpSmartContracts() {
@@ -186,11 +200,12 @@ async function user1Stake10LPTokensAtBlock310() {
 
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
-    // let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: deployer });   /// [Result]: Success
-    // let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });  /// [Result]: Success
 
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });    /// [Result]: Fail
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });   /// [Result]: Fail
+    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
+    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
+
+    // let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
+    // let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
 }
 
 async function user2Stake20LPTokensAtBlock314() {
