@@ -59,16 +59,12 @@ async function main() {
     await preparationForTestsInAdvance();
 
     console.log("\n------------- Process of the NFT yield farming (in case all staked-LP tokens are not withdrawn) -------------");
-    await processOfNFTYieldFarming();
-}
-
-async function processOfNFTYieldFarming() {
     await currentBlock1();
     await addNewNFTPoolAsATarget();
     await user1Stake10LPTokensAtBlock310();
     await user2Stake20LPTokensAtBlock314();
     await user3Stake30LPTokensAtBlock318();
-
+    
     await currentBlock2();
     await totalSupplyOfGovernanceToken();
     await governanceTokenBalanceOfUser1();
