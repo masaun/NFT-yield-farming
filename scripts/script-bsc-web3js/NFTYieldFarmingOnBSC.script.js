@@ -1,11 +1,13 @@
+require('dotenv').config();
+
+/// Tx
+const Tx = require('ethereumjs-tx').Transaction;
+
 /// Using BSC testnet
 const Web3 = require('web3');
 //const web3 = new Web3('https://data-seed-prebsc-2-s1.binance.org:8545'); /// [Note]: Endpoing is the BSC testnet
 const provider = new Web3.providers.HttpProvider('https://data-seed-prebsc-2-s1.binance.org:8545');
 const web3 = new Web3(provider);
-
-/// Openzeppelin test-helper
-const { time } = require('@openzeppelin/test-helpers');
 
 /// Artifact of smart contracts 
 const NFTYieldFarming = artifacts.require("NFTYieldFarmingOnBSC");  /// on BSC
