@@ -62,6 +62,21 @@ async function main() {
     await processOfNFTYieldFarming();
 }
 
+async function processOfNFTYieldFarming() {
+    await currentBlock1();
+    await addNewNFTPoolAsATarget();
+    await user1Stake10LPTokensAtBlock310();
+    await user2Stake20LPTokensAtBlock314();
+    await user3Stake30LPTokensAtBlock318();
+
+    await currentBlock2();
+    await totalSupplyOfGovernanceToken();
+    await governanceTokenBalanceOfUser1();
+    await governanceTokenBalanceOfanotherUsers();
+    await governanceTokenBalanceOfNFTYieldFarmingOnBSCContract();
+    await unstakeAndWithdraw();
+}
+
 
 ///-----------------------------------------------
 /// Methods
@@ -133,26 +148,10 @@ async function preparationForTestsInAdvance() {
     let txReceipt3 = await lpToken.transfer(user3, amount, { from: deployer });
 }
 
-async function processOfNFTYieldFarming() {
-    await currentBlock1();
-    await addNewNFTPoolAsATarget();
-    await user1Stake10LPTokensAtBlock310();
-    await user2Stake20LPTokensAtBlock314();
-    await user3Stake30LPTokensAtBlock318();
-
-    await currentBlock2();
-    await totalSupplyOfGovernanceToken();
-    await governanceTokenBalanceOfUser1();
-    await governanceTokenBalanceOfanotherUsers();
-    await governanceTokenBalanceOfNFTYieldFarmingOnBSCContract();
-    await unstakeAndWithdraw();
-}
-
 
 ///------------------------------
 /// Process of NFT Yield Farming
 ///------------------------------
-
 async function currentBlock1() {
     const currentBlock = await web3.eth.getBlockNumber();
     console.log('=== currentBlock 1 ===', String(currentBlock));
@@ -178,8 +177,8 @@ async function user1Stake10LPTokensAtBlock310() {
     let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: deployer });   /// [Result]: Success
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });  /// [Result]: Success
 
-    //let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });    /// [Result]: Success
-    //let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });   /// [Result]: Success
+    //let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });    /// [Result]: Fail
+    //let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });   /// [Result]: Fail
 }
 
 async function user2Stake20LPTokensAtBlock314() {
