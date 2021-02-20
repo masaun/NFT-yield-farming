@@ -1,11 +1,17 @@
+///--------------------------------------------------------
+/// Script for executing on BSC testnet (web3.js version)
+///--------------------------------------------------------
+
+require('dotenv').config();
+
+/// Tx
+const Tx = require('ethereumjs-tx').Transaction;
+
 /// Using BSC testnet
 const Web3 = require('web3');
 //const web3 = new Web3('https://data-seed-prebsc-2-s1.binance.org:8545'); /// [Note]: Endpoing is the BSC testnet
 const provider = new Web3.providers.HttpProvider('https://data-seed-prebsc-2-s1.binance.org:8545');
 const web3 = new Web3(provider);
-
-/// Openzeppelin test-helper
-const { time } = require('@openzeppelin/test-helpers');
 
 /// Artifact of smart contracts 
 const NFTYieldFarming = artifacts.require("NFTYieldFarmingOnBSC");  /// on BSC
@@ -25,6 +31,13 @@ let user1;
 let user2;
 let user3;
 
+/// Private Key of each accounts
+let privateKeyOfDeployer;
+let privateKeyOfAdmin;
+let privateKeyOfUser1;
+let privateKeyOfUser2;
+let privateKeyOfUser3;
+
 /// Global contract instance
 let nftYieldFarming;
 let nftToken;
@@ -36,6 +49,12 @@ let NFT_YIELD_FARMING;
 let NFT_TOKEN;
 let LP_TOKEN;
 let GOVERNANCE_TOKEN;
+
+/// ABI
+let NFT_YIELD_FARMING_ABI;
+let NFT_TOKEN_ABI;
+let LP_TOKEN_ABI;
+let GOVERNANCE_TOKEN_ABI;
 
 
 ///-----------------------------------------------
@@ -93,6 +112,13 @@ async function checkStateInAdvance() {
     console.log('=== user1 ===', user1);
     console.log('=== user2 ===', user2);
     console.log('=== user3 ===', user3);
+
+    /// Assign private keys
+    privateKeyOfDeployer = process.env.PRIVATE_KEY_OF_DEPLOYER_WALLET;
+    privateKeyOfAdmin = process.env.PRIVATE_KEY_OF_ADMIN_WALLET;
+    privateKeyOfUser1 = process.env.PRIVATE_KEY_OF_USER_1_WALLET;
+    privateKeyOfUser2 = process.env.PRIVATE_KEY_OF_USER_2_WALLET;
+    privateKeyOfUser3 = process.env.PRIVATE_KEY_OF_USER_3_WALLET;
 }
 
 async function setUpSmartContracts() {
@@ -100,23 +126,26 @@ async function setUpSmartContracts() {
     console.log("Deploy the NFT token (ERC721) contract instance");
     // NFT_TOKEN = "0x1fa22E714E7F1012E6F438a89D89940B8f836B03";
     // nftToken = await NFTToken.at(NFT_TOKEN);
-    nftToken = await NFTToken.new({ from: deployer });
-    NFT_TOKEN = nftToken.address;
-    console.log('=== NFT_TOKEN ===', NFT_TOKEN);
+    const _nftToken = await NFTToken.new({ from: deployer });
+    NFT_TOKEN = _nftToken.address;
+    NFT_TOKEN_ABI = _nftToken.abi;
+    nftToken = new web3.eth.Contract(NFT_TOKEN_ABI, NFT_TOKEN);
 
     console.log("Deploy the LP token (BEP20) contract instance");
     // LP_TOKEN = "0xa7ed98650d4C5EC7DDDA9394a68bDC257E4f1e75";
     // lpToken = await LPToken.at(LP_TOKEN);
-    lpToken = await LPToken.new({ from: deployer });
-    LP_TOKEN = lpToken.address;
-    console.log('=== LP_TOKEN ===', LP_TOKEN);
+    const _lpToken = await LPToken.new({ from: deployer });
+    LP_TOKEN = _lpToken.address;
+    LP_TOKEN_ABI = _lpToken.abi;
+    lpToken = new web3.eth.Contract(LP_TOKEN_ABI, LP_TOKEN);
 
     console.log("Deploy the Governance token (BEP20) contract instance");
     // GOVERNANCE_TOKEN = "0xf9Cd775feaE9E57E2675C04cB6F6aF3148097cC8";
     // governanceToken = await GovernanceToken.at(GOVERNANCE_TOKEN);
-    governanceToken = await GovernanceToken.new({ from: deployer });
-    GOVERNANCE_TOKEN = governanceToken.address;
-    console.log('=== GOVERNANCE_TOKEN ===', GOVERNANCE_TOKEN);
+    const _governanceToken = await GovernanceToken.new({ from: deployer });
+    GOVERNANCE_TOKEN = _governanceToken.address;
+    GOVERNANCE_TOKEN_ABI = _governanceToken.abi;
+    governanceToken = new web3.eth.Contract(GOVERNANCE_TOKEN_ABI, GOVERNANCE_TOKEN);
 
     console.log("Deploy the NFTYieldFarming contract instance");
     /// [Note]: 100 per block farming rate starting at block 300 with bonus until block 1000
@@ -125,27 +154,38 @@ async function setUpSmartContracts() {
     const _startBlock = "300";
     const _bonusEndBlock = "1000";
 
-    nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
-    NFT_YIELD_FARMING = nftYieldFarming.address;
-    console.log('=== NFT_YIELD_FARMING ===', NFT_YIELD_FARMING);  /// e.g. 0x28E0F63035Fb8beC5aA4D71163D3244585c9A054  
+    const _nftYieldFarming = await NFTYieldFarming.new(GOVERNANCE_TOKEN, _devaddr, _governanceTokenPerBlock, _startBlock, _bonusEndBlock, { from: deployer });
+    NFT_YIELD_FARMING = _nftYieldFarming.address;
+    NFT_YIELD_FARMING_ABI = _nftYieldFarming.abi;
+    nftYieldFarming = new web3.eth.Contract(NFT_YIELD_FARMING_ABI, NFT_YIELD_FARMING);
 }
 
 async function transferOwnershipToNFTYieldFarmingContract() {
     console.log("Transfer ownership of the Governance token (ERC20) contract to the NFTYieldFarming contract");
     const newOwner = NFT_YIELD_FARMING;
-    const txReceipt = await governanceToken.transferOwnership(newOwner, { from: deployer });
+    //const txReceipt = await governanceToken.transferOwnership(newOwner, { from: deployer });
+    let inputData1 = await governanceToken.methods.transferOwnership(newOwner).encodeABI();
+    let transaction1 = await sendTransaction(deployer, privateKeyOfDeployer, GOVERNANCE_TOKEN, inputData1);
 }
 
 async function preparationForTestsInAdvance() {
     console.log("Mint the NFT token (ERC721) to user1");
     const tokenURI = "https://testnft.example/token-id-8u5h2m.json";
-    let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
+    //let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
+    let inputData1 = await nftToken.methods.mintTo(user1, tokenURI).encodeABI();
+    let transaction1 = await sendTransaction(deployer, privateKeyOfDeployer, NFT_TOKEN, inputData1);
 
     console.log("Transfer the LP token (BEP20) from deployer to 3 users");
     const amount = web3.utils.toWei('1000', 'ether');
-    let txReceipt1 = await lpToken.transfer(user1, amount, { from: deployer });
-    let txReceipt2 = await lpToken.transfer(user2, amount, { from: deployer });
-    let txReceipt3 = await lpToken.transfer(user3, amount, { from: deployer });
+    // let txReceipt1 = await lpToken.transfer(user1, amount, { from: deployer });
+    // let txReceipt2 = await lpToken.transfer(user2, amount, { from: deployer });
+    // let txReceipt3 = await lpToken.transfer(user3, amount, { from: deployer });
+    let inputData2 = await nftToken.methods.mintTo(user1, amount).encodeABI();
+    let inputData3 = await nftToken.methods.mintTo(user2, amount).encodeABI();
+    let inputData4 = await nftToken.methods.mintTo(user3, amount).encodeABI();
+    let transaction2 = await sendTransaction(deployer, privateKeyOfDeployer, NFT_TOKEN, inputData2);
+    let transaction3 = await sendTransaction(deployer, privateKeyOfDeployer, NFT_TOKEN, inputData3);
+    let transaction4 = await sendTransaction(deployer, privateKeyOfDeployer, NFT_TOKEN, inputData4);
 }
 
 
@@ -163,7 +203,9 @@ async function addNewNFTPoolAsATarget() {
     const _lpToken = LP_TOKEN;    /// LP token to be staked
     const _allocPoint = "100";
     const _withUpdate = true;
-    let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer });
+    //let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer });
+    let inputData1 = await nftYieldFarming.methods.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate).encodeABI();
+    let transaction1 = await sendTransaction(deployer, privateKeyOfDeployer, NFT_YIELD_FARMING, inputData1);
 }
 
 async function user1Stake10LPTokensAtBlock310() {
@@ -174,11 +216,12 @@ async function user1Stake10LPTokensAtBlock310() {
 
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
-    // let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: deployer });   /// [Result]: Success
-    // let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });  /// [Result]: Success
-
-    let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });    /// [Result]: Fail
-    let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });   /// [Result]: Fail
+    // let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 });
+    // let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 });
+    let inputData1 = await lpToken.methods.approve(NFT_YIELD_FARMING, _stakeAmount).encodeABI();
+    let inputData2 = await nftYieldFarming.methods.deposit(_nftPoolId, _stakeAmount).encodeABI();
+    let transaction1 = await sendTransaction(user1, privateKeyOfUser1, LP_TOKEN, inputData1);
+    let transaction2 = await sendTransaction(user1, privateKeyOfUser1, NFT_YIELD_FARMING, inputData2);
 }
 
 async function user2Stake20LPTokensAtBlock314() {
@@ -291,3 +334,47 @@ async function unstakeAndWithdraw() {
     let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 });
     console.log('=== GovernanceToken balance of user1 ===', String(governanceTokenBalanceOfUser1));
 }
+
+
+///-------------------------------------
+/// Sign and Broadcast the transaction
+///-------------------------------------
+async function sendTransaction(walletAddress, privateKey, contractAddress, inputData) {
+    try {
+        const txCount = await web3.eth.getTransactionCount(walletAddress);
+        const nonce = await web3.utils.toHex(txCount);
+        console.log('=== txCount, nonce ===', txCount, nonce);
+
+        /// Build the transaction
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            from:     walletAddress,
+            to:       contractAddress,  /// Contract address which will be executed
+            value:    web3.utils.toHex(web3.utils.toWei('0', 'ether')),
+            gasLimit: web3.utils.toHex(2100000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('6', 'gwei')),
+            data: inputData  
+        }
+        console.log('=== txObject ===', txObject)
+
+        /// Sign the transaction
+        privateKey = Buffer.from(privateKey, 'hex');
+        //let tx = new Tx(txObject, { 'chain': 'kovan'});  /// Chain ID = kovan
+        let tx = new Tx(txObject, { 'chain': '97'});  /// Chain ID = 97 (BSC testnet)
+        tx.sign(privateKey);
+
+        const serializedTx = tx.serialize();
+        const raw = '0x' + serializedTx.toString('hex');
+
+        /// Broadcast the transaction
+        const transaction = await web3.eth.sendSignedTransaction(raw);
+        console.log('=== transaction ===', transaction)
+
+        /// Return the result above
+        return transaction;
+    } catch(e) {
+        console.log('=== e ===', e);
+        return String(e);
+    }
+}
+

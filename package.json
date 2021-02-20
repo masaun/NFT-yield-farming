@@ -9,7 +9,8 @@
     "test": "truffle test ./test/test-local/*",
     "test:nft-yield-farming": "truffle test ./test/test-local/NFTYieldFarming.test.js",
     "test:nft-yield-farming_bsc-testnet": "truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet",
-    "script:nft-yield-farming_bsc-testnet": "truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet",
+    "script:nft-yield-farming_bsc": "truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet",
+    "script:nft-yield-farming_bsc-web3js": "truffle exec ./scripts/script-bsc-web3js/NFTYieldFarmingOnBSC.script.js --network bsc_testnet",
     "compile:local": "truffle compile --reset --network local",
     "compile:bsc_testnet": "truffle compile --reset --network bsc_testnet",
     "migrate:local": "truffle migrate --reset --network local",
@@ -23,7 +24,8 @@
     "@openzeppelin/test-helpers": "^0.5.10",
     "@truffle/hdwallet-provider": "^1.2.2",
     "dotenv": "^8.2.0",
-    "eth-block-tracker": "^4.4.3"
+    "eth-block-tracker": "^4.4.3",
+    "ethereumjs-tx": "^2.1.2"
   },
   "devDependencies": {}
 }
