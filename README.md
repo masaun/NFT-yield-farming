@@ -49,6 +49,7 @@ $ npm run migrate:bsc-testnet
 
 ### ③ Test
 - Execute test of the smart-contracts (on the BSC testnet)
+  - [Note]: Sometime, timeout happen on this test. So I recommend that you try `④ Script` below at first.   
 ```
 $ npm run test:nft-yield-farming_bsc-testnet
 ($ truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet)
