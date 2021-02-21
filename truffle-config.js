@@ -6,7 +6,8 @@ const mnemonic = process.env.MNEMONIC;
 module.exports = {
   networks: {
     bsc_testnet: {  /// This is used for deployment and truffle test
-      provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-2-s1.binance.org:8545`),
+      provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s2.binance.org:8545`),    /// [Note]: New RPC Endpoint
+      //provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-2-s1.binance.org:8545`),  /// [Note]: 503 eror
       network_id: 97,
       networkCheckTimeout: 9999,
       confirmations: 10,
