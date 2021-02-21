@@ -135,12 +135,6 @@ async function preparationForTestsInAdvance() {
     console.log("Mint the NFT token (ERC721) to user1");
     const tokenURI = "https://testnft.example/token-id-8u5h2m.json";
     let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
-
-    console.log("Transfer the LP token (BEP20) from deployer to 3 users");
-    const amount = web3.utils.toWei('1000', 'ether');
-    let txReceipt1 = await lpToken.transfer(user1, amount, { from: deployer });
-    let txReceipt2 = await lpToken.transfer(user2, amount, { from: deployer });
-    let txReceipt3 = await lpToken.transfer(user3, amount, { from: deployer });
 }
 
 
