@@ -55,15 +55,15 @@ async function main() {
     console.log("\n------------- Preparation for tests in advance -------------");
     await preparationForTestsInAdvance();
 
-    console.log("\n------------- Process of the NFT yield farming (in case all staked-LP tokens are not withdrawn) -------------");
+    console.log("\n------------- Process of the NFT yield farming -------------");
     await addNewNFTPoolAsATarget();
     await stake10LPTokens();
     await stake20LPTokens();
     await stake30LPTokens();
     await stake10MoreLPTokens();
     await totalSupplyOfGovernanceToken();
-    await governanceTokenBalanceOfUser1();
-    await governanceTokenBalanceOfanotherUsers();
+    await governanceTokenBalanceOfStaker();
+    await governanceTokenBalanceOfAdmin();
     await governanceTokenBalanceOfNFTYieldFarmingOnBSCContract();
     await unstakeAndWithdraw();
 }
@@ -79,7 +79,7 @@ async function checkStateInAdvance() {
     user1 = process.env.USER_1_WALLET;
     user2 = process.env.USER_2_WALLET;
     user3 = process.env.USER_3_WALLET;
-    console.log('=== deployer ===', deployer);
+    console.log('=== deployer (staker) ===', deployer);
     console.log('=== admin ===', admin);
     console.log('=== user1 ===', user1);
     console.log('=== user2 ===', user2);
@@ -147,7 +147,7 @@ async function getCurrentBlock() {
 async function addNewNFTPoolAsATarget() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Add a new NFT Pool as a target (at block ${currentBlock})`);
+    console.log(`Add a new NFT Pool as a target of yield farming (at block ${currentBlock})`);
     const _nftToken = NFT_TOKEN;  /// NFT token as a target to stake
     const _lpToken = LP_TOKEN;    /// LP token to be staked
     const _allocPoint = "100";
@@ -200,51 +200,44 @@ async function stake10MoreLPTokens() {
 }
 
 async function totalSupplyOfGovernanceToken() {
-    const currentBlock = await getCurrentBlock();
-
-    console.log(`Total Supply of the GovernanceToken should be 11000 (at block ${currentBlock})`);
-    ///  At this point (At block 321): 
-    ///      TotalSupply of GovernanceToken: 1000 * (321 - 310) = 11000
-    ///      User1 should have: 4*1000 + 4*1/3*1000 + 2*1/6*1000 = 5666
-    ///      NFTYieldFarming contract should have the remaining: 10000 - 5666 = 4334
+    ///  ex). Assuming that starting block is at 310 and current block at 321: 
+    ///         - TotalSupply of GovernanceToken: 1000 * (321 - 310) = 11000
+    ///         - A staker should have: 4*1000 + 4*1/3*1000 + 2*1/6*1000 = 5666
+    ///         - NFTYieldFarming contract should have the remaining: 10000 - 5666 = 4334
     let totalSupplyOfGovernanceToken = await governanceToken.totalSupply();
-    console.log('=== totalSupplyOfGovernanceToken ===', String(totalSupplyOfGovernanceToken));
+    const currentBlock = await getCurrentBlock();
+    console.log(`Total Supply of the GovernanceToken should be ${String(totalSupplyOfGovernanceToken)} (at block ${currentBlock})`);
 }
 
-async function governanceTokenBalanceOfUser1() {
-    const currentBlock = await getCurrentBlock();
-
-    console.log(`GovernanceToken balance of deployer should be 5667 (at block ${currentBlock})`);
+async function governanceTokenBalanceOfStaker() {
     let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
-    console.log('=== GovernanceToken balance of staker ===', String(governanceTokenBalanceOfDeployer));
+    const currentBlock = await getCurrentBlock();
+    console.log(`GovernanceToken balance of a staker should be ${String(governanceTokenBalanceOfDeployer)} (at block ${currentBlock})`);
 }
 
-async function governanceTokenBalanceOfanotherUsers() {
-    const currentBlock = await getCurrentBlock();
-
-    console.log(`GovernanceToken balance of admin (at block ${currentBlock})`);
+async function governanceTokenBalanceOfAdmin() {
     let governanceTokenBalanceOfAdmin = await governanceToken.balanceOf(admin, { from: admin });
-    console.log('=== GovernanceToken balance of admin ===', String(governanceTokenBalanceOfAdmin));
+    const currentBlock = await getCurrentBlock();
+    console.log(`GovernanceToken balance of admin should be ${String(governanceTokenBalanceOfAdmin)} (at block ${currentBlock})`);
 }
 
 async function governanceTokenBalanceOfNFTYieldFarmingOnBSCContract() {
+    let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: deployer });
     const currentBlock = await getCurrentBlock();
-
-    console.log(`GovernanceToken balance of the NFTYieldFarmingOnBSC contract should be 4333 (at block ${currentBlock})`);
-    let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: user1 });
-    console.log('=== GovernanceToken balance of the NFTYieldFarming contract ===', String(governanceTokenBalance));
+    console.log(`GovernanceToken balance of the NFTYieldFarmingOnBSC contract should be ${String(governanceTokenBalance)} (at block ${currentBlock})`);
 }
 
 async function unstakeAndWithdraw() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Un-stake and withdraw 10 LP tokens and receive 5952 GovernanceToken as rewards (at block ${currentBlock})`);
-    /// [Note]: Total LPs amount staked of user1 is 20 LP tokens at block 321.
-    /// [Note]: Therefore, maximum withdraw amount for user1 is 20 LPs
+    console.log(`Un-stake (withdraw) 10 LP tokens and receive some GovernanceToken as rewards (at block ${currentBlock})`);
+    /// [Note]: Total LPs amount staked of a staker is 20 LP tokens at this block.
+    /// [Note]: Therefore, maximum withdraw amount for a staker is 20 LPs
     const _nftPoolId = 0;
     const _unStakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
     let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: deployer });
 
+    /// Check final GovernanceToken balance of a staker
     let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
-    console.log('=== GovernanceToken balance of staker ===', String(governanceTokenBalanceOfDeployer));
+    console.log(`Finally, GovernanceToken balance of a staker should be ${String(governanceTokenBalanceOfDeployer)} (at block ${currentBlock})`);
 }
