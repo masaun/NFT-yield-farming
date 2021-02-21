@@ -19,31 +19,6 @@
 
 ***
 
-## 【Remarks】
-- Governance Token
-  - At the moment, Governance Token is used as a reward token.
-  - Although it has not implemented yet, I will implement Governance Token for governance strucure (e.g. Governance Token holders can vote, etc...) in the future.
-
-<br>
-
-- LP tokens
-  - Assuming LP tokens is a pair between the Governance Token and BNB. 
-  - But, pool to create this pair (LP tokens) has not been implemented yet. (at the mement)
-
-
-<br>
-
-- Version
-  - Solidity (Solc): v0.6.12
-  - Truffle: v5.1.60
-  - web3.js: v1.2.9
-  - openzeppelin-solidity: v3.2.0
-
-
-&nbsp;
-
-***
-
 ## 【Setup】
 ### ① Install modules
 - Install npm modules in the root directory
@@ -54,8 +29,8 @@ $ npm install
 <br>
 
 ### ② Add `.env` to the root directory.
-- Please copy code of `.env.example` into your `.env`
-https://github.com/masaun/NFT-yield-farming/blob/main/.env.example
+- Please copy code of `.env.example` into your `.env`  
+https://github.com/masaun/NFT-yield-farming/blob/main/.env.example  
 
 <br>
 
@@ -83,7 +58,43 @@ $ npm run script:nft-yield-farming_bsc-testnet
 ($ truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet)
 ```
 
+&nbsp;
+
+***
+
+## 【Remarks】
+- When 503 Error happen, please select a new `BSC RPC Endpoints` to change by referencing the list below
+https://docs.binance.org/smart-chain/developer/rpc.html
+![Screen Shot 2021-02-21 at 08 44 38](https://user-images.githubusercontent.com/19357502/108611369-64463e80-7421-11eb-9e56-166a3321ca22.png)
+↓
+- Then, please replace `BSC RPC Endpoints` for 2 files below.
+  - truffle-config.js
+    https://github.com/masaun/NFT-yield-farming/blob/main/truffle-config.js#L9
+  - NFTYieldFarmingOnBSC.script.js
+    https://github.com/masaun/NFT-yield-farming/blob/main/scripts/script-bsc/NFTYieldFarmingOnBSC.script.js#L5
+
 <br>
+
+- Governance Token
+  - At the moment, Governance Token is used as a reward token.
+  - Although it has not implemented yet, I will implement Governance Token for governance strucure (e.g. Governance Token holders can vote, etc...) in the future.
+
+<br>
+
+- LP tokens
+  - Assuming LP tokens is a pair between the Governance Token and BNB. 
+  - But, pool to create this pair (LP tokens) has not been implemented yet. (at the mement)
+
+<br>
+
+- Version
+  - Solidity (Solc): v0.6.12
+  - Truffle: v5.1.60
+  - web3.js: v1.2.9
+  - openzeppelin-solidity: v3.2.0
+
+
+<br>  
 
 ***
 
