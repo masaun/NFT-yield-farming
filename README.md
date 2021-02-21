@@ -12,8 +12,8 @@
 ***
 
 ## 【Workflow】
-- Diagram / Workflow
-
+- Diagram / Workflow  
+![【Diagram】NFT Yield Farming on BSC](https://user-images.githubusercontent.com/19357502/108629603-1888a900-74a4-11eb-9337-581f757d7b4c.jpg)
 
 &nbsp;
 
