@@ -3,7 +3,8 @@
 ***
 ## 【Introduction of the NFT Yield Farming on BSC】
 - This is a smart contract that enable a user to farm yield by staking LP tokens into a NFT pool.
-  - User who staked can receive the Governance Tokens as farmed-yield (as rewards) when that user un-stake.
+  - Once a user stake LP tokens into a NFT pool, reward token (Governance Token) are mined every block.
+  - User who staked can receive the Governance Tokens as rewards (as farmed-yield) when that user un-stake.
 - This smart contract works on BSC (Binance Smart Chain).
 
 &nbsp;
@@ -19,9 +20,16 @@
 ***
 
 ## 【Remarks】
+- Governance Token
+  - At the moment, Governance Token is used as a reward token.
+  - Although it has not implemented yet, I will implement Governance Token for governance strucure (e.g. Governance Token holders can vote, etc...) in the future.
+
+<br>
+
 - LP tokens
   - Assuming LP tokens is a pair between the Governance Token and BNB. 
   - But, pool to create this pair (LP tokens) has not been implemented yet. (at the mement)
+
 
 <br>
 
