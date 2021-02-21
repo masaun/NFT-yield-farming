@@ -216,7 +216,7 @@ async function totalSupplyOfGovernanceToken() {
 async function governanceTokenBalanceOfUser1() {
     console.log("GovernanceToken balance of deployer should be 5667 (at block 321)");
     let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
-    console.log('=== GovernanceToken balance of deployer ===', String(governanceTokenBalanceOfDeployer));
+    console.log('=== GovernanceToken balance of staker ===', String(governanceTokenBalanceOfDeployer));
 }
 
 async function governanceTokenBalanceOfanotherUsers() {
@@ -240,5 +240,5 @@ async function unstakeAndWithdraw() {
     let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: deployer });
 
     let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
-    console.log('=== GovernanceToken balance of deployer ===', String(governanceTokenBalanceOfDeployer));
+    console.log('=== GovernanceToken balance of staker ===', String(governanceTokenBalanceOfDeployer));
 }
