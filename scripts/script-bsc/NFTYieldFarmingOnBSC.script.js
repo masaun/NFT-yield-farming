@@ -55,17 +55,15 @@ async function main() {
     console.log("\n------------- Preparation for tests in advance -------------");
     await preparationForTestsInAdvance();
 
-    console.log("\n------------- Process of the NFT yield farming (in case all staked-LP tokens are not withdrawn) -------------");
-    await currentBlock1();
+    console.log("\n------------- Process of the NFT yield farming -------------");
     await addNewNFTPoolAsATarget();
-    await stake10LPTokensAtBlock310();
-    await stake20LPTokensAtBlock314();
-    await stake30LPTokensAtBlock318();
-    
-    await currentBlock2();
+    await stake10LPTokens();
+    await stake20LPTokens();
+    await stake30LPTokens();
+    await stake10MoreLPTokens();
     await totalSupplyOfGovernanceToken();
-    await governanceTokenBalanceOfUser1();
-    await governanceTokenBalanceOfanotherUsers();
+    await governanceTokenBalanceOfStaker();
+    await governanceTokenBalanceOfAdmin();
     await governanceTokenBalanceOfNFTYieldFarmingOnBSCContract();
     await unstakeAndWithdraw();
 }
@@ -81,7 +79,7 @@ async function checkStateInAdvance() {
     user1 = process.env.USER_1_WALLET;
     user2 = process.env.USER_2_WALLET;
     user3 = process.env.USER_3_WALLET;
-    console.log('=== deployer ===', deployer);
+    console.log('=== deployer (staker) ===', deployer);
     console.log('=== admin ===', admin);
     console.log('=== user1 ===', user1);
     console.log('=== user2 ===', user2);
@@ -132,28 +130,24 @@ async function transferOwnershipToNFTYieldFarmingContract() {
 }
 
 async function preparationForTestsInAdvance() {
-    console.log("Mint the NFT token (ERC721) to user1");
+    console.log("Mint the NFT token (ERC721) to a future staker");
     const tokenURI = "https://testnft.example/token-id-8u5h2m.json";
-    let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
-
-    console.log("Transfer the LP token (BEP20) from deployer to 3 users");
-    const amount = web3.utils.toWei('1000', 'ether');
-    let txReceipt1 = await lpToken.transfer(user1, amount, { from: deployer });
-    let txReceipt2 = await lpToken.transfer(user2, amount, { from: deployer });
-    let txReceipt3 = await lpToken.transfer(user3, amount, { from: deployer });
+    let txReceipt = await nftToken.mintTo(deployer, tokenURI, { from: deployer });
 }
 
 
 ///------------------------------
 /// Process of NFT Yield Farming
 ///------------------------------
-async function currentBlock1() {
+async function getCurrentBlock() {
     const currentBlock = await web3.eth.getBlockNumber();
-    console.log('=== currentBlock 1 ===', String(currentBlock));
+    return currentBlock;
 }
 
 async function addNewNFTPoolAsATarget() {
-    console.log("Add a new NFT Pool as a target");
+    const currentBlock = await getCurrentBlock();
+
+    console.log(`Add a new NFT Pool as a target of yield farming (at block ${currentBlock})`);
     const _nftToken = NFT_TOKEN;  /// NFT token as a target to stake
     const _lpToken = LP_TOKEN;    /// LP token to be staked
     const _allocPoint = "100";
@@ -161,8 +155,10 @@ async function addNewNFTPoolAsATarget() {
     let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer });
 }
 
-async function stake10LPTokensAtBlock310() {
-    console.log("Stake 10 LP tokens at block 310");
+async function stake10LPTokens() {
+    const currentBlock = await getCurrentBlock();
+
+    console.log(`Stake 10 LP tokens at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
@@ -170,8 +166,10 @@ async function stake10LPTokensAtBlock310() {
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });
 }
 
-async function stake20LPTokensAtBlock314() {
-    console.log("Stake 20 LP tokens at block 314");
+async function stake20LPTokens() {
+    const currentBlock = await getCurrentBlock();
+
+    console.log(`Stake 20 LP tokens at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('20', 'ether');  /// 20 LP Token
@@ -179,8 +177,10 @@ async function stake20LPTokensAtBlock314() {
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });
 }
 
-async function stake30LPTokensAtBlock318() {
-    console.log("Stake 30 LP tokens at block 318");
+async function stake30LPTokens() {
+    const currentBlock = await getCurrentBlock();
+
+    console.log(`Stake 30 LP tokens at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('30', 'ether');  /// 30 LP Token
@@ -188,57 +188,56 @@ async function stake30LPTokensAtBlock318() {
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });
 }
 
-async function stake10MoreLPTokensAtBlock320() {
-    console.log("Stake 10 more LP tokens at block 320");
+async function stake10MoreLPTokens() {
+    const currentBlock = await getCurrentBlock();
+
+    console.log(`Stake 10 more LP tokens at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
-    const _stakeAmount4 = web3.utils.toWei('10', 'ether');  /// 10 LP Token
+    const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
     let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: deployer });
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });
 }
 
-async function currentBlock2() {
-    console.log("Current block should be at block 321");
-    const currentBlock = await web3.eth.getBlockNumber();
-    console.log('=== currentBlock 2 ===', String(currentBlock));
-}
-
 async function totalSupplyOfGovernanceToken() {
-    console.log("Total Supply of the GovernanceToken should be 11000 (at block 321)");
-    ///  At this point (At block 321): 
-    ///      TotalSupply of GovernanceToken: 1000 * (321 - 310) = 11000
-    ///      User1 should have: 4*1000 + 4*1/3*1000 + 2*1/6*1000 = 5666
-    ///      NFTYieldFarming contract should have the remaining: 10000 - 5666 = 4334
+    ///  ex). Assuming that starting block is at 310 and current block at 321: 
+    ///         - TotalSupply of GovernanceToken: 1000 * (321 - 310) = 11000
+    ///         - A staker should have: 4*1000 + 4*1/3*1000 + 2*1/6*1000 = 5666
+    ///         - NFTYieldFarming contract should have the remaining: 10000 - 5666 = 4334
     let totalSupplyOfGovernanceToken = await governanceToken.totalSupply();
-    console.log('=== totalSupplyOfGovernanceToken ===', String(totalSupplyOfGovernanceToken));
+    const currentBlock = await getCurrentBlock();
+    console.log(`Total Supply of the GovernanceToken should be ${String(totalSupplyOfGovernanceToken)} (at block ${currentBlock})`);
 }
 
-async function governanceTokenBalanceOfUser1() {
-    console.log("GovernanceToken balance of deployer should be 5667 (at block 321)");
+async function governanceTokenBalanceOfStaker() {
     let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
-    console.log('=== GovernanceToken balance of staker ===', String(governanceTokenBalanceOfDeployer));
+    const currentBlock = await getCurrentBlock();
+    console.log(`GovernanceToken balance of a staker should be ${String(governanceTokenBalanceOfDeployer)} (at block ${currentBlock})`);
 }
 
-async function governanceTokenBalanceOfanotherUsers() {
-    console.log("GovernanceToken balance of admin (at block 321)");
+async function governanceTokenBalanceOfAdmin() {
     let governanceTokenBalanceOfAdmin = await governanceToken.balanceOf(admin, { from: admin });
-    console.log('=== GovernanceToken balance of admin ===', String(governanceTokenBalanceOfAdmin));
+    const currentBlock = await getCurrentBlock();
+    console.log(`GovernanceToken balance of admin should be ${String(governanceTokenBalanceOfAdmin)} (at block ${currentBlock})`);
 }
 
 async function governanceTokenBalanceOfNFTYieldFarmingOnBSCContract() {
-    console.log("GovernanceToken balance of the NFTYieldFarmingOnBSC contract should be 4333 (at block 321)");
-    let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: user1 });
-    console.log('=== GovernanceToken balance of the NFTYieldFarming contract ===', String(governanceTokenBalance));
+    let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: deployer });
+    const currentBlock = await getCurrentBlock();
+    console.log(`GovernanceToken balance of the NFTYieldFarmingOnBSC contract should be ${String(governanceTokenBalance)} (at block ${currentBlock})`);
 }
 
 async function unstakeAndWithdraw() {
-    console.log("Un-stake and withdraw 10 LP tokens and receive 5952 GovernanceToken as rewards (at block 322)");
-    /// [Note]: Total LPs amount staked of user1 is 20 LP tokens at block 321.
-    /// [Note]: Therefore, maximum withdraw amount for user1 is 20 LPs
+    const currentBlock = await getCurrentBlock();
+
+    console.log(`Un-stake (withdraw) 10 LP tokens and receive some GovernanceToken as rewards (at block ${currentBlock})`);
+    /// [Note]: Total LPs amount staked of a staker is 20 LP tokens at this block.
+    /// [Note]: Therefore, maximum withdraw amount for a staker is 20 LPs
     const _nftPoolId = 0;
     const _unStakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
     let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: deployer });
 
+    /// Check final GovernanceToken balance of a staker
     let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
-    console.log('=== GovernanceToken balance of staker ===', String(governanceTokenBalanceOfDeployer));
+    console.log(`Finally, GovernanceToken balance of a staker should be ${String(governanceTokenBalanceOfDeployer)} (at block ${currentBlock})`);
 }
