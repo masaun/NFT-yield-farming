@@ -10,7 +10,9 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { BEP20GovernanceToken } from "./mock-bsc-tokens/BEP20GovernanceToken.sol";
 
 
-// NFTYieldFarming (BEP20 version on BSC) is the master contract of GovernanceToken. This contract can make GovernanceToken.
+/**
+ * @notice - NFTYieldFarming (BEP20 version on BSC) is the master contract of GovernanceToken. This contract can make GovernanceToken.
+ */
 contract NFTYieldFarmingOnBSC is Ownable {
     using SafeMath for uint256;
     //using SafeERC20 for IERC20;
@@ -179,7 +181,7 @@ contract NFTYieldFarmingOnBSC is Ownable {
         pool.lastRewardBlock = block.number;
     }
 
-    // Deposit LP tokens to the NFTYieldFarming contract for GovernanceToken allocation.
+    // Deposit (Stake) LP tokens to the NFTYieldFarming contract for GovernanceToken allocation.
     function deposit(uint256 _pid, uint256 _amount) public {
         NFTPoolInfo storage pool = nftPoolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
@@ -201,7 +203,7 @@ contract NFTYieldFarmingOnBSC is Ownable {
         emit Deposit(msg.sender, _pid, _amount);
     }
 
-    // Withdraw LP tokens from the NFTYieldFarming contract.
+    // Withdraw (Un-Stake) LP tokens from the NFTYieldFarming contract.
     function withdraw(uint256 _pid, uint256 _amount) public {
         NFTPoolInfo storage pool = nftPoolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];

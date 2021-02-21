@@ -2,7 +2,9 @@
 
 ***
 ## 【Introduction of the NFT Yield Farming on BSC】
-- This is a smart contract that ...
+- This is a smart contract that enable a user to farm yield by staking LP tokens into a NFT pool.
+  - User who staked can receive the governance tokens as farmed-yield (as rewards) when that user un-stake.
+- This smart contract works on BSC (Binance Smart Chain).
 
 &nbsp;
 
@@ -21,7 +23,6 @@
   - Truffle: v5.1.60
   - web3.js: v1.2.9
   - openzeppelin-solidity: v3.2.0
-  - ganache-cli: v6.9.1 (ganache-core: 2.10.2)
 
 
 &nbsp;
@@ -38,38 +39,18 @@ $ npm install
 <br>
 
 ### ② Compile & migrate contracts (on Locan or BSC testnet)
-- 1: Migrate on local
+- Migrate on BSC testnet
 ```
-$ npm run migrate:local
-```
-
-- 2: Migrate on BSC testnet
-```
-$ npm run migrate:bsc_testnet
+$ npm run migrate:bsc-testnet
 ```
 
 
 <br>
 
 ### ③ Test
-- 1: Start ganache-cli
-```
-$ ganache-cli -d
-```
-(※ `-d` option is the option in order to be able to use same address on Ganache-CLI every time)
-
-<br>
-
-- 2: Execute test of the smart-contracts (on the local)
-  - Test for the contract
-    - `$ npm run test:nft-yield-farming`
-       ($ truffle test ./test/test-local/NFTYieldFarming.test.js)
-
-<br>
-
-- 3: Execute test of the smart-contracts (on the BSC testnet)
-    - `$ npm run test:nft-yield-farming_bsc-testnet`
-       ($ truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet)
+- Execute test of the smart-contracts (on the BSC testnet)
+  - `$ npm run test:nft-yield-farming_bsc-testnet`
+     ($ truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet)
 
 <br>
 
@@ -77,16 +58,7 @@ $ ganache-cli -d
 - Execute script of the smart-contracts on the BSC testnet (with `truffle exec` command)
   - Truffle exec version
 ```
-$ npm run script:nft-yield-farming_bsc
-($ truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet)
-```
-
-
-<br>
-
-  - web3.js version
-```
-$ npm run script:nft-yield-farming_bsc-web3js
+$ npm run script:nft-yield-farming_bsc-testnet
 ($ truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet)
 ```
 
@@ -114,3 +86,8 @@ https://docs.google.com/document/d/1JF_P-AokXhSe38bNqLTNhlhKIu0JrcNRVReGdoBA-0o/
 - BSC
   - BEP20Token.template: 
     https://github.com/binance-chain/bsc-genesis-contract/blob/master/contracts/bep20_template/BEP20Token.template
+  
+<br>
+
+- BSC RPC Endpoints:  
+  https://docs.binance.org/smart-chain/developer/rpc.html
