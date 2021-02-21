@@ -56,13 +56,12 @@ async function main() {
     await preparationForTestsInAdvance();
 
     console.log("\n------------- Process of the NFT yield farming (in case all staked-LP tokens are not withdrawn) -------------");
-    await currentBlock1();
+    await getCurrentBlock();
     await addNewNFTPoolAsATarget();
-    await stake10LPTokensAtBlock310();
-    await stake20LPTokensAtBlock314();
-    await stake30LPTokensAtBlock318();
-    
-    await currentBlock2();
+    await stake10LPTokens();
+    await stake20LPTokens();
+    await stake30LPTokens();
+    await stake10MoreLPTokens();
     await totalSupplyOfGovernanceToken();
     await governanceTokenBalanceOfUser1();
     await governanceTokenBalanceOfanotherUsers();
@@ -141,13 +140,13 @@ async function preparationForTestsInAdvance() {
 ///------------------------------
 /// Process of NFT Yield Farming
 ///------------------------------
-async function currentBlock1() {
+async function getCurrentBlock() {
     const currentBlock = await web3.eth.getBlockNumber();
-    console.log('=== currentBlock 1 ===', String(currentBlock));
+    console.log('=== currentBlock ===', String(currentBlock));
 }
 
 async function addNewNFTPoolAsATarget() {
-    console.log("Add a new NFT Pool as a target");
+    console.log(`Add a new NFT Pool as a target (at block ${currentBlock + 1})`);
     const _nftToken = NFT_TOKEN;  /// NFT token as a target to stake
     const _lpToken = LP_TOKEN;    /// LP token to be staked
     const _allocPoint = "100";
@@ -155,7 +154,7 @@ async function addNewNFTPoolAsATarget() {
     let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer });
 }
 
-async function stake10LPTokensAtBlock310() {
+async function stake10LPTokens() {
     console.log("Stake 10 LP tokens at block 310");
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
@@ -164,7 +163,7 @@ async function stake10LPTokensAtBlock310() {
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });
 }
 
-async function stake20LPTokensAtBlock314() {
+async function stake20LPTokens() {
     console.log("Stake 20 LP tokens at block 314");
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
@@ -173,7 +172,7 @@ async function stake20LPTokensAtBlock314() {
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });
 }
 
-async function stake30LPTokensAtBlock318() {
+async function stake30LPTokens() {
     console.log("Stake 30 LP tokens at block 318");
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
@@ -182,19 +181,13 @@ async function stake30LPTokensAtBlock318() {
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });
 }
 
-async function stake10MoreLPTokensAtBlock320() {
+async function stake10MoreLPTokens() {
     console.log("Stake 10 more LP tokens at block 320");
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount4 = web3.utils.toWei('10', 'ether');  /// 10 LP Token
     let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: deployer });
     let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: deployer });
-}
-
-async function currentBlock2() {
-    console.log("Current block should be at block 321");
-    const currentBlock = await web3.eth.getBlockNumber();
-    console.log('=== currentBlock 2 ===', String(currentBlock));
 }
 
 async function totalSupplyOfGovernanceToken() {
