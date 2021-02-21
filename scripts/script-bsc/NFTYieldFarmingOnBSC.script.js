@@ -228,9 +228,6 @@ async function governanceTokenBalanceOfNFTYieldFarmingOnBSCContract() {
 }
 
 async function unstakeAndWithdraw() {
-    const currentBlock = await getCurrentBlock();
-
-    console.log(`Un-stake (withdraw) 10 LP tokens and receive some GovernanceToken as rewards (at block ${currentBlock})`);
     /// [Note]: Total LPs amount staked of a staker is 20 LP tokens at this block.
     /// [Note]: Therefore, maximum withdraw amount for a staker is 20 LPs
     const _nftPoolId = 0;
@@ -239,5 +236,6 @@ async function unstakeAndWithdraw() {
 
     /// Check final GovernanceToken balance of a staker
     let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
-    console.log(`Finally, GovernanceToken balance of a staker should be ${String(governanceTokenBalanceOfDeployer)} (at block ${currentBlock})`);
+    const currentBlock = await getCurrentBlock();
+    console.log(`Un-stake (withdraw) 10 LP tokens and receive ${String(governanceTokenBalanceOfDeployer)} GovernanceToken as rewards (at block ${currentBlock})`);
 }
