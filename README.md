@@ -3,7 +3,7 @@
 ***
 ## 【Introduction of the NFT Yield Farming on BSC】
 - This is a smart contract that enable a user to farm yield by staking LP tokens into a NFT pool.
-  - User who staked can receive the governance tokens as farmed-yield (as rewards) when that user un-stake.
+  - User who staked can receive the Governance Tokens as farmed-yield (as rewards) when that user un-stake.
 - This smart contract works on BSC (Binance Smart Chain).
 
 &nbsp;
@@ -13,11 +13,18 @@
 ## 【Workflow】
 - Diagram / Workflow
 
+
 &nbsp;
 
 ***
 
 ## 【Remarks】
+- LP tokens
+  - Assuming LP tokens is a pair between the Governance Token and BNB. 
+  - But, pool to create this pair (LP tokens) has not been implemented yet. (at the mement)
+
+<br>
+
 - Version
   - Solidity (Solc): v0.6.12
   - Truffle: v5.1.60
@@ -49,7 +56,7 @@ $ npm run migrate:bsc-testnet
 
 ### ③ Test
 - Execute test of the smart-contracts (on the BSC testnet)
-  - [Note]: Sometime, timeout happen on this test. So I recommend that you try `④ Script` below at first.   
+  - [Note]: Sometime, timeout happen on this test. So I recommend that you try `④ Script` below instead of this test.   
 ```
 $ npm run test:nft-yield-farming_bsc-testnet
 ($ truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet)
