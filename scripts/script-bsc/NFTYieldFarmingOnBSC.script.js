@@ -158,7 +158,7 @@ async function addNewNFTPoolAsATarget() {
 async function stake10LPTokens() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Stake 10 LP tokens at block ${currentBlock}`);
+    console.log(`Stake 10 LP tokens into a NFT Pool at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
@@ -169,7 +169,7 @@ async function stake10LPTokens() {
 async function stake20LPTokens() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Stake 20 LP tokens at block ${currentBlock}`);
+    console.log(`Stake 20 LP tokens into a NFT Pool at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('20', 'ether');  /// 20 LP Token
@@ -180,7 +180,7 @@ async function stake20LPTokens() {
 async function stake30LPTokens() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Stake 30 LP tokens at block ${currentBlock}`);
+    console.log(`Stake 30 LP tokens into a NFT Pool at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('30', 'ether');  /// 30 LP Token
@@ -191,7 +191,7 @@ async function stake30LPTokens() {
 async function stake10MoreLPTokens() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Stake 10 more LP tokens at block ${currentBlock}`);
+    console.log(`Stake 10 more LP tokens into a NFT Pool at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
