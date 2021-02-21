@@ -53,10 +53,9 @@ $ npm install
 
 <br>
 
-### ② Compile & migrate contracts (on Locan or BSC testnet)
-- Migrate on BSC testnet
+### ② Compile contracts (on BSC testnet)
 ```
-$ npm run migrate:bsc-testnet
+$ npm run compile:bsc-testnet
 ```
 
 
