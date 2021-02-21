@@ -132,9 +132,9 @@ async function transferOwnershipToNFTYieldFarmingContract() {
 }
 
 async function preparationForTestsInAdvance() {
-    console.log("Mint the NFT token (ERC721) to user1");
+    console.log("Mint the NFT token (ERC721) to a future staker");
     const tokenURI = "https://testnft.example/token-id-8u5h2m.json";
-    let txReceipt = await nftToken.mintTo(user1, tokenURI, { from: deployer });
+    let txReceipt = await nftToken.mintTo(deployer, tokenURI, { from: deployer });
 }
 
 
