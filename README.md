@@ -49,14 +49,15 @@ $ npm run migrate:bsc-testnet
 
 ### ③ Test
 - Execute test of the smart-contracts (on the BSC testnet)
-  - `$ npm run test:nft-yield-farming_bsc-testnet`
-     ($ truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet)
+```
+$ npm run test:nft-yield-farming_bsc-testnet
+($ truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet)
+```
 
 <br>
 
 ### ④ Script
 - Execute script of the smart-contracts on the BSC testnet (with `truffle exec` command)
-  - Truffle exec version
 ```
 $ npm run script:nft-yield-farming_bsc-testnet
 ($ truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet)
