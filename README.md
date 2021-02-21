@@ -53,17 +53,22 @@ $ npm install
 
 <br>
 
-### ② Compile contracts (on BSC testnet)
+### ② Add `.env` to the root directory.
+- Please copy code of `.env.example` into your `.env`
+https://github.com/masaun/NFT-yield-farming/blob/main/.env.example
+
+<br>
+
+### ③ Compile contracts (on BSC testnet)
 ```
 $ npm run compile:bsc-testnet
 ```
 
-
 <br>
 
-### ③ Test
+### ④ Test
 - Execute test of the smart-contracts (on the BSC testnet)
-  - [Note]: Sometime, timeout happen on this test. So I recommend that you try `④ Script` below instead of this test.   
+  - [Note]: Sometime, timeout happen on this test. So I recommend that you try `⑤ Script` below instead of this test.   
 ```
 $ npm run test:nft-yield-farming_bsc-testnet
 ($ truffle test ./test/test-bsc/NFTYieldFarmingOnBSC.test.js --network bsc_testnet)
@@ -71,7 +76,7 @@ $ npm run test:nft-yield-farming_bsc-testnet
 
 <br>
 
-### ④ Script
+### ⑤ Script
 - Execute script of the smart-contracts on the BSC testnet (with `truffle exec` command)
 ```
 $ npm run script:nft-yield-farming_bsc-testnet

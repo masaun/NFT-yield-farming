@@ -76,14 +76,8 @@ async function checkStateInAdvance() {
     /// Assign addresses into global variables of wallets
     deployer = process.env.DEPLOYER_WALLET;
     admin = process.env.ADMIN_WALLET;
-    user1 = process.env.USER_1_WALLET;
-    user2 = process.env.USER_2_WALLET;
-    user3 = process.env.USER_3_WALLET;
     console.log('=== deployer (staker) ===', deployer);
     console.log('=== admin ===', admin);
-    console.log('=== user1 ===', user1);
-    console.log('=== user2 ===', user2);
-    console.log('=== user3 ===', user3);
 }
 
 async function setUpSmartContracts() {
