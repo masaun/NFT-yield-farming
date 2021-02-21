@@ -158,7 +158,7 @@ async function addNewNFTPoolAsATarget() {
 async function stake10LPTokens() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Stake 10 LP tokens at block ${currentBlock}`);
+    console.log(`Stake 10 LP tokens into a NFT Pool at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
@@ -169,7 +169,7 @@ async function stake10LPTokens() {
 async function stake20LPTokens() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Stake 20 LP tokens at block ${currentBlock}`);
+    console.log(`Stake 20 LP tokens into a NFT Pool at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('20', 'ether');  /// 20 LP Token
@@ -180,7 +180,7 @@ async function stake20LPTokens() {
 async function stake30LPTokens() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Stake 30 LP tokens at block ${currentBlock}`);
+    console.log(`Stake 30 LP tokens into a NFT Pool at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('30', 'ether');  /// 30 LP Token
@@ -191,7 +191,7 @@ async function stake30LPTokens() {
 async function stake10MoreLPTokens() {
     const currentBlock = await getCurrentBlock();
 
-    console.log(`Stake 10 more LP tokens at block ${currentBlock}`);
+    console.log(`Stake 10 more LP tokens into a NFT Pool at block ${currentBlock}`);
     /// [Note]: Block to mint the GovernanceToken start from block 300.
     const _nftPoolId = 0;
     const _stakeAmount = web3.utils.toWei('10', 'ether');  /// 10 LP Token
@@ -204,33 +204,34 @@ async function totalSupplyOfGovernanceToken() {
     ///         - TotalSupply of GovernanceToken: 1000 * (321 - 310) = 11000
     ///         - A staker should have: 4*1000 + 4*1/3*1000 + 2*1/6*1000 = 5666
     ///         - NFTYieldFarming contract should have the remaining: 10000 - 5666 = 4334
-    let totalSupplyOfGovernanceToken = await governanceToken.totalSupply();
+    let _totalSupplyOfGovernanceToken = await governanceToken.totalSupply();
+    const totalSupplyOfGovernanceToken = Math.round(web3.utils.fromWei(String(_totalSupplyOfGovernanceToken), 'ether'));
     const currentBlock = await getCurrentBlock();
-    console.log(`Total Supply of the GovernanceToken should be ${String(totalSupplyOfGovernanceToken)} (at block ${currentBlock})`);
+    console.log(`Total Supply of the GovernanceToken should be ${totalSupplyOfGovernanceToken} (at block ${currentBlock})`);
 }
 
 async function governanceTokenBalanceOfStaker() {
-    let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
+    let _governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
+    const governanceTokenBalanceOfDeployer = Math.round(web3.utils.fromWei(String(_governanceTokenBalanceOfDeployer), 'ether'));
     const currentBlock = await getCurrentBlock();
-    console.log(`GovernanceToken balance of a staker should be ${String(governanceTokenBalanceOfDeployer)} (at block ${currentBlock})`);
+    console.log(`GovernanceToken balance of a staker should be ${governanceTokenBalanceOfDeployer} (at block ${currentBlock})`);
 }
 
 async function governanceTokenBalanceOfAdmin() {
-    let governanceTokenBalanceOfAdmin = await governanceToken.balanceOf(admin, { from: admin });
+    let _governanceTokenBalanceOfAdmin = await governanceToken.balanceOf(admin, { from: admin });
+    const governanceTokenBalanceOfAdmin = Math.round(web3.utils.fromWei(String(_governanceTokenBalanceOfAdmin), 'ether'));
     const currentBlock = await getCurrentBlock();
-    console.log(`GovernanceToken balance of admin should be ${String(governanceTokenBalanceOfAdmin)} (at block ${currentBlock})`);
+    console.log(`GovernanceToken balance of admin should be ${governanceTokenBalanceOfAdmin} (at block ${currentBlock})`);
 }
 
 async function governanceTokenBalanceOfNFTYieldFarmingOnBSCContract() {
-    let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: deployer });
+    let _governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: deployer });
+    const governanceTokenBalance = Math.round(web3.utils.fromWei(String(_governanceTokenBalance), 'ether'));
     const currentBlock = await getCurrentBlock();
-    console.log(`GovernanceToken balance of the NFTYieldFarmingOnBSC contract should be ${String(governanceTokenBalance)} (at block ${currentBlock})`);
+    console.log(`GovernanceToken balance of the NFTYieldFarmingOnBSC contract should be ${governanceTokenBalance} (at block ${currentBlock})`);
 }
 
 async function unstakeAndWithdraw() {
-    const currentBlock = await getCurrentBlock();
-
-    console.log(`Un-stake (withdraw) 10 LP tokens and receive some GovernanceToken as rewards (at block ${currentBlock})`);
     /// [Note]: Total LPs amount staked of a staker is 20 LP tokens at this block.
     /// [Note]: Therefore, maximum withdraw amount for a staker is 20 LPs
     const _nftPoolId = 0;
@@ -238,6 +239,8 @@ async function unstakeAndWithdraw() {
     let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: deployer });
 
     /// Check final GovernanceToken balance of a staker
-    let governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
-    console.log(`Finally, GovernanceToken balance of a staker should be ${String(governanceTokenBalanceOfDeployer)} (at block ${currentBlock})`);
+    let _governanceTokenBalanceOfDeployer = await governanceToken.balanceOf(deployer, { from: deployer });
+    const governanceTokenBalanceOfDeployer = Math.round(web3.utils.fromWei(String(_governanceTokenBalanceOfDeployer), 'ether'));
+    const currentBlock = await getCurrentBlock();
+    console.log(`Un-stake (withdraw) 10 LP tokens and receive ${governanceTokenBalanceOfDeployer} GovernanceToken as rewards (at block ${currentBlock})`);
 }
