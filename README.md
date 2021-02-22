@@ -29,7 +29,8 @@ $ npm install
 <br>
 
 ### ② Add `.env` to the root directory.
-- Please copy code of `.env.example` into your `.env`  
+- Please copy code of `.env.example` into your `.env` 
+  (Then, please input your information of wallets, private keys, etc... by following code of `.env.example` )
 https://github.com/masaun/NFT-yield-farming/blob/main/.env.example  
 
 <br>
