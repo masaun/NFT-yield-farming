@@ -2,7 +2,7 @@
 
 ***
 ## 【Introduction of the NFT Yield Farming on BSC】
-- This is a smart contract that enable a user to farm yield by staking LP tokens into a NFT pool.
+- This is a smart contract that enable a user to farm yield by staking LP tokens (BEP20) into a NFT pool.
   - Once a user stake LP tokens into a NFT pool, reward token (Governance Token) are mined every block.
   - User who staked can receive the Governance Tokens as rewards (as farmed-yield) when that user un-stake.
 - This smart contract works on BSC (Binance Smart Chain).
@@ -58,6 +58,8 @@ $ npm run test:nft-yield-farming_bsc-testnet
 $ npm run script:nft-yield-farming_bsc-testnet
 ($ truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet)
 ```
+(※ Note: In advance, please check whether your deployer' wallet address on BSC testnet has enough BNB balance or not)
+
 
 &nbsp;
 
@@ -83,6 +85,7 @@ https://docs.binance.org/smart-chain/developer/rpc.html
 <br>
 
 - LP tokens
+  - LP token is created by BEP20.
   - Assuming LP tokens is a pair between the Governance Token and BNB. 
   - But, pool to create this pair (LP tokens) has not been implemented yet. (at the mement)
 
