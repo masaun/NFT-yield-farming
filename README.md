@@ -58,6 +58,8 @@ $ npm run test:nft-yield-farming_bsc-testnet
 $ npm run script:nft-yield-farming_bsc-testnet
 ($ truffle exec ./scripts/script-bsc/NFTYieldFarmingOnBSC.script.js --network bsc_testnet)
 ```
+(※ Note: In advance, please check whether your deployer' wallet address on BSC testnet has enough BNB balance or not)
+
 
 &nbsp;
 
